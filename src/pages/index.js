@@ -56,7 +56,7 @@ const IndexPage = () => {
 			setTimeout(() => {
 				setImportedData(jsonData); // Guardar datos importados
 				setLoading(false); // Finalizar carga
-			}, 1000); // Retraso de 1 segundo
+			}, 0); // Retraso de 1 segundo
 		};
 		reader.readAsArrayBuffer(file);
 	};
@@ -76,69 +76,106 @@ const IndexPage = () => {
 			title: "Article ID",
 			dataIndex: "articleId",
 			key: "articleId",
+			width: "10%",
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
 			key: "description",
+			width: "20%",
+			ellipsis: true,
 		},
 		{
-			title: "Gross Cost",
-			dataIndex: "grossCost",
-			key: "grossCost",
-			render: (text, record) =>
-				(showWithIVA ? record.grossCost * 1.21 : record.grossCost).toFixed(2), // Aplica IVA si está activado
+			title: "COSTO",
+			children: [
+				{
+					title: "Costo Bruto",
+					dataIndex: "grossCost",
+					key: "grossCost",
+					align: "right",
+					render: (text, record) =>
+						(showWithIVA ? record.grossCost * 1.21 : record.grossCost).toFixed(
+							2
+						), // Aplica IVA si está activado
+				},
+				{
+					title: "Costo Neto",
+					dataIndex: "netCost",
+					key: "netCost",
+					align: "right",
+					render: (text, record) =>
+						(showWithIVA ? record.netCost * 1.21 : record.netCost).toFixed(2), // Aplica IVA si está activado
+				},
+				{
+					title: "Nuevo Costo",
+					dataIndex: "importedNetCost",
+					key: "importedNetCost",
+					align: "right",
+					render: (text) =>
+						loading ? (
+							<Spin size="small" />
+						) : text !== null ? (
+							text.toFixed(2)
+						) : (
+							"N/A"
+						), // Mostrar spinner si está cargando
+				},
+				{
+					title: "Variación",
+					dataIndex: "variation",
+					key: "variation",
+					align: "right",
+					render: (value) => {
+						if (value === null) return "N/A"; // Si no hay valor
+						const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
+						return (
+							<span style={{ color: value > 1 ? "green" : "red" }}>
+								{value > 1 ? <UpOutlined /> : <DownOutlined />}
+								{Math.abs(percentage)}%
+							</span>
+						);
+					},
+				},
+			],
 		},
 		{
-			title: "Net Cost",
-			dataIndex: "netCost",
-			key: "netCost",
-			render: (text, record) =>
-				(showWithIVA ? record.netCost * 1.21 : record.netCost).toFixed(2), // Aplica IVA si está activado
-		},
-		{
-			title: "Margin",
-			dataIndex: "margin",
-			key: "margin",
-			render: (_, record) => record.prices[0]?.margin + "%" || "N/A", // Accede al margen
-		},
-		{
-			title: "Net Price",
-			dataIndex: "netPrice",
-			key: "netPrice",
-			render: (_, record) =>
-				(showWithIVA
-					? record.prices[0]?.netPrice * 1.21
-					: record.prices[0]?.netPrice || "N/A"
-				).toFixed(2), // Aplica IVA si está activado
-		},
-		{
-			title: "Imported Net Cost",
-			dataIndex: "importedNetCost",
-			key: "importedNetCost",
-			render: (text) =>
-				loading ? (
-					<Spin size="small" />
-				) : text !== null ? (
-					text.toFixed(2)
-				) : (
-					"N/A"
-				), // Mostrar spinner si está cargando
-		},
-		{
-			title: "Variación",
-			dataIndex: "variation",
-			key: "variation",
-			render: (value) => {
-				if (value === null) return "N/A"; // Si no hay valor
-				const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
-				return (
-					<span style={{ color: value > 1 ? "green" : "red" }}>
-						{value > 1 ? <UpOutlined /> : <DownOutlined />}
-						{Math.abs(percentage)}%
-					</span>
-				);
-			},
+			title: "LISTA NORMAL",
+			children: [
+				{
+					title: "Margin",
+					dataIndex: "margin",
+					key: "margin",
+					align: "right",
+					render: (_, record) => record.prices[0]?.margin + "%" || "N/A", // Accede al margen
+				},
+				{
+					title: "Net Price",
+					dataIndex: "netPrice",
+					key: "netPrice",
+					align: "right",
+					render: (_, record) =>
+						(showWithIVA
+							? record.prices[0]?.netPrice * 1.21
+							: record.prices[0]?.netPrice || "N/A"
+						).toFixed(2), // Aplica IVA si está activado
+				},
+				{
+					title: "Variación",
+					dataIndex: "variation",
+					key: "variation",
+					align: "right",
+					render: (value) => {
+						if (value === null) return "N/A"; // Si no hay valor
+						const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
+						return (
+							<span style={{ color: value > 1 ? "green" : "red" }}>
+								{value > 1 ? <UpOutlined /> : <DownOutlined />}
+								{Math.abs(percentage)}%
+							</span>
+						);
+					},
+				},
+			],
 		},
 	];
 
@@ -160,6 +197,7 @@ const IndexPage = () => {
 			<Switch checked={showWithIVA} onChange={handleSwitchChange} />
 			<span style={{ marginLeft: 16 }}>Precios con IVA</span>
 			<Table
+				bordered
 				columns={columns}
 				dataSource={mergedData}
 				rowKey="articleId"
