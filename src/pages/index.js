@@ -12,7 +12,24 @@ const IndexPage = () => {
 	const [showWithIVA, setShowWithIVA] = useState(false); // Estado para el Switch
 	const [importedData, setImportedData] = useState([]); // Estado para los datos importados
 	const [loading, setLoading] = useState(false); // Estado para controlar la carga
+	const [newMargins, setNewMargins] = useState({}); // Estado para almacenar newMargins
+	const [newPrices, setNewPrices] = useState({}); // Estado para almacenar newPrices
+	const handleNewMarginChange = (value, record) => {
+		const newMargin = value; // Obtener el nuevo margen
+		const importedNetCost = record.importedNetCost || 0; // Obtener el costo neto importado
+		const calculatedNewPrice = importedNetCost * (1 + newMargin / 100); // Calcular el nuevo precio
 
+		// Actualizar el estado de newMargins y newPrices
+		setNewMargins((prev) => ({
+			...prev,
+			[record.articleId]: newMargin, // Usar articleId como clave
+		}));
+
+		setNewPrices((prev) => ({
+			...prev,
+			[record.articleId]: calculatedNewPrice, // Usar articleId como clave
+		}));
+	};
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -158,7 +175,7 @@ const IndexPage = () => {
 			children: [
 				{
 					title: "Ganancia",
-					dataIndex: "margin",
+					dataIndex: "currentMargin",
 					key: "margin",
 					align: "right",
 					width: "5%",
@@ -180,7 +197,7 @@ const IndexPage = () => {
 				},
 				{
 					title: "Precio",
-					dataIndex: "netPrice",
+					dataIndex: "currentPrice",
 					key: "netPrice",
 					align: "right",
 					width: "5%",
@@ -191,47 +208,69 @@ const IndexPage = () => {
 				},
 				{
 					title: "🆕 Ganancia",
-					dataIndex: "margin",
-					key: "margin",
+					dataIndex: "newMargin",
+					key: "newMargin",
 					align: "right",
 					width: "5%",
 					render: (value, record) => (
 						<InputNumber
 							type="number"
-							defaultValue={record.prices[0]?.margin || ""}
-							suffix="%"
-							style={{ width: "100%", border: "0px", textAlign: "right" }} // Asegura que el input ocupe el ancho completo
+							value={newMargins[record.articleId] || 0} // Usar el valor del estado o 0
+							onChange={(value) => handleNewMarginChange(value, record)} // Manejar el cambio
+							style={{ width: "100%" }} // Asegura que el input ocupe el ancho completo
 						/>
-					), // Accede al margen
+					), // Accede al nuevo margen
 				},
 				{
 					title: "🆕 Precio",
-					dataIndex: "netPrice",
-					key: "netPrice",
+					dataIndex: "newPrice",
+					key: "newPrice",
 					align: "right",
 					width: "5%",
-					render: (_, record) =>
-						showWithIVA
-							? formatearNumero(record.prices[0]?.netPrice * 1.21)
-							: formatearNumero(record.prices[0]?.netPrice) || "N/A", // Aplica IVA si está activado
+					render: (_, record) => {
+						const newPrice =
+							newPrices[record.articleId] ||
+							record.importedNetCost *
+								(1 + (newMargins[record.articleId] || 0) / 100); // Calcular el nuevo precio
+
+						return (
+							<span>
+								{/* Mostrar el nuevo precio con dos decimales */}
+								{showWithIVA
+									? formatearNumero(newPrice * 1.21)
+									: formatearNumero(newPrice) || "N/A"}
+							</span>
+						);
+					}, // Muestra el nuevo precio
 				},
 
 				{
-					title: "Variación",
-					dataIndex: "variation",
-					key: "variation",
+					title: "🆕 Variación",
+					dataIndex: "newVariation",
+					key: "newVariation",
 					align: "right",
 					width: "5%",
-					render: (value) => {
-						if (value === null) return "N/A"; // Si no hay valor
+					render: (_, record) => {
+						const newPrice =
+							newPrices[record.articleId] ||
+							record.importedNetCost *
+								(1 +
+									(newMargins[record.articleId] || record.currentMargin) / 100); // Calcular el nuevo precio
+						const netPrice = record.prices[0]?.netPrice || 1; // Asegúrate de que netPrice no sea 0 para evitar división por cero
+						const value = newPrice / netPrice; // Calcular la variación
 						const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
+
+						// Verificar si el valor está en el rango de -0.1 a 0.1
+						if (percentage > -0.1 && percentage < 0.1) {
+							return <span style={{ color: "gray" }}>0</span>; // Mostrar "0" en gris
+						}
 						return (
 							<span style={{ color: value > 1 ? "green" : "red" }}>
 								{value > 1 ? <UpOutlined /> : <DownOutlined />}
 								{Math.abs(percentage)}%
 							</span>
 						);
-					},
+					}, // Muestra la variación
 				},
 			],
 		},
