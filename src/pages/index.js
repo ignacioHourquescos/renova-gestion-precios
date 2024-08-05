@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Select, Switch, Spin } from "antd";
+import { Table, Select, Switch, Spin, InputNumber } from "antd";
 import { groups } from "./dummy_agrupation";
 import * as XLSX from "xlsx"; // Importar la biblioteca xlsx
 import { UpOutlined, DownOutlined } from "@ant-design/icons"; // Importar íconos
@@ -51,8 +51,9 @@ const IndexPage = () => {
 			const workbook = XLSX.read(data, { type: "array" });
 			const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 			const jsonData = XLSX.utils.sheet_to_json(worksheet);
-			setImportedData(jsonData); // Guardar datos importados
-			// Simular un retraso para mostrar el spinner
+
+			// Limpiar datos importados anteriores
+			setImportedData([]); // Limpiar datos anteriores
 			setTimeout(() => {
 				setImportedData(jsonData); // Guardar datos importados
 				setLoading(false); // Finalizar carga
@@ -60,23 +61,26 @@ const IndexPage = () => {
 		};
 		reader.readAsArrayBuffer(file);
 	};
-
 	const mergedData = data.map((item) => {
 		const importedItem = importedData.find(
-			(i) => i.articleId.toString() === item.articleId.toString()
+			(i) =>
+				i.articleId &&
+				item.articleId &&
+				i.articleId.toString() === item.articleId.toString()
 		);
 		return {
 			...item,
 			importedNetCost: importedItem ? importedItem.NetCost : null,
 		};
 	});
-
 	const columns = [
 		{
 			title: "Article ID",
 			dataIndex: "articleId",
 			key: "articleId",
 			width: "10%",
+			rowScope: "row",
+			fixed: "left",
 		},
 		{
 			title: "Description",
@@ -84,40 +88,47 @@ const IndexPage = () => {
 			key: "description",
 			width: "20%",
 			ellipsis: true,
+			rowScope: "row",
+			fixed: "left",
 		},
 		{
-			title: "COSTO",
+			title: <h3 style={{ margin: "0", padding: "0" }}>COSTO NETO</h3>,
 			children: [
+				//{
+				//	title: "Costo Bruto",
+				//	dataIndex: "grossCost",
+				//	key: "grossCost",
+				//	align: "right",
+				//	width: "7%",
+				//	render: (text, record) =>
+				//		showWithIVA
+				//			? formatearNumero(record.grossCost * 1.21)
+				//			: formatearNumero(record.grossCost), // Aplica IVA si está activado
+				//},
 				{
-					title: "Costo Bruto",
-					dataIndex: "grossCost",
-					key: "grossCost",
-					align: "right",
-					render: (text, record) =>
-						(showWithIVA ? record.grossCost * 1.21 : record.grossCost).toFixed(
-							2
-						), // Aplica IVA si está activado
-				},
-				{
-					title: "Costo Neto",
+					title: "Costo",
 					dataIndex: "netCost",
 					key: "netCost",
 					align: "right",
+					width: "5%",
 					render: (text, record) =>
-						(showWithIVA ? record.netCost * 1.21 : record.netCost).toFixed(2), // Aplica IVA si está activado
+						showWithIVA
+							? formatearNumero(record.netCost * 1.21)
+							: formatearNumero(record.netCost), // Aplica IVA si está activado
 				},
 				{
-					title: "Nuevo Costo",
+					title: "🆕 Costo",
 					dataIndex: "importedNetCost",
 					key: "importedNetCost",
 					align: "right",
+					width: "5%",
 					render: (text) =>
 						loading ? (
 							<Spin size="small" />
 						) : text !== null ? (
-							text.toFixed(2)
+							formatearNumero(text)
 						) : (
-							"N/A"
+							"-"
 						), // Mostrar spinner si está cargando
 				},
 				{
@@ -125,8 +136,12 @@ const IndexPage = () => {
 					dataIndex: "variation",
 					key: "variation",
 					align: "right",
-					render: (value) => {
-						if (value === null) return "N/A"; // Si no hay valor
+					width: "5%",
+					render: (_, record) => {
+						// Cambia el primer parámetro a "_" para ignorarlo
+						const { importedNetCost, netCost, grossCost } = record; // Desestructuración correcta
+						if (importedNetCost === null || netCost === null) return "-"; // Si no hay valor
+						const value = importedNetCost / grossCost; // Calcular variación
 						const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
 						return (
 							<span style={{ color: value > 1 ? "green" : "red" }}>
@@ -139,31 +154,74 @@ const IndexPage = () => {
 			],
 		},
 		{
-			title: "LISTA NORMAL",
+			title: <h3 style={{ margin: "0", padding: "0" }}>LISTA NORMAL</h3>,
 			children: [
 				{
-					title: "Margin",
+					title: "Ganancia",
 					dataIndex: "margin",
 					key: "margin",
 					align: "right",
-					render: (_, record) => record.prices[0]?.margin + "%" || "N/A", // Accede al margen
+					width: "5%",
+					render: (value, record) => (
+						<InputNumber
+							type="number"
+							defaultValue={record.prices[0]?.margin || ""}
+							suffix="%"
+							disabled
+							style={{
+								width: "100%",
+								border: "0px",
+								textAlign: "right",
+								justifyItems: "right",
+								padding: "0",
+							}} // Asegura que el input ocupe el ancho completo
+						/>
+					), // Muestra el margen como texto
 				},
 				{
-					title: "Net Price",
+					title: "Precio",
 					dataIndex: "netPrice",
 					key: "netPrice",
 					align: "right",
+					width: "5%",
 					render: (_, record) =>
-						(showWithIVA
-							? record.prices[0]?.netPrice * 1.21
-							: record.prices[0]?.netPrice || "N/A"
-						).toFixed(2), // Aplica IVA si está activado
+						showWithIVA
+							? formatearNumero(record.prices[0]?.netPrice * 1.21)
+							: formatearNumero(record.prices[0]?.netPrice) || "N/A", // Aplica IVA si está activado
 				},
+				{
+					title: "🆕 Ganancia",
+					dataIndex: "margin",
+					key: "margin",
+					align: "right",
+					width: "5%",
+					render: (value, record) => (
+						<InputNumber
+							type="number"
+							defaultValue={record.prices[0]?.margin || ""}
+							suffix="%"
+							style={{ width: "100%", border: "0px", textAlign: "right" }} // Asegura que el input ocupe el ancho completo
+						/>
+					), // Accede al margen
+				},
+				{
+					title: "🆕 Precio",
+					dataIndex: "netPrice",
+					key: "netPrice",
+					align: "right",
+					width: "5%",
+					render: (_, record) =>
+						showWithIVA
+							? formatearNumero(record.prices[0]?.netPrice * 1.21)
+							: formatearNumero(record.prices[0]?.netPrice) || "N/A", // Aplica IVA si está activado
+				},
+
 				{
 					title: "Variación",
 					dataIndex: "variation",
 					key: "variation",
 					align: "right",
+					width: "5%",
 					render: (value) => {
 						if (value === null) return "N/A"; // Si no hay valor
 						const percentage = ((value - 1) * 100).toFixed(2); // Calcular porcentaje
@@ -208,3 +266,22 @@ const IndexPage = () => {
 };
 
 export default IndexPage;
+
+function formatearNumero(num) {
+	// Convierte el número a un string con dos decimales
+	let partes = num.toFixed(2).split(".");
+	const entero = partes[0];
+	const decimal = partes[1];
+
+	// Añade el separador de miles
+	partes[0] = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+	// Une las partes con la coma para los decimales
+	return <span>${partes[0]}</span>;
+	return (
+		<span>
+			${partes[0]},
+			<span style={{ color: "gray", fontSize: "small" }}>{decimal}</span>
+		</span>
+	);
+}
