@@ -96,7 +96,7 @@ const IndexPage = () => {
 			dataIndex: "articleId",
 			key: "articleId",
 			width: "10%",
-			rowScope: "row",
+			//rowScope: "row",
 			fixed: "left",
 		},
 		{
@@ -105,7 +105,7 @@ const IndexPage = () => {
 			key: "description",
 			width: "20%",
 			ellipsis: true,
-			rowScope: "row",
+			//rowScope: "row",
 			fixed: "left",
 		},
 		{
@@ -134,7 +134,7 @@ const IndexPage = () => {
 							: formatearNumero(record.netCost), // Aplica IVA si está activado
 				},
 				{
-					title: "🆕 Costo",
+					title: "🆕Costo",
 					dataIndex: "importedNetCost",
 					key: "importedNetCost",
 					align: "right",
@@ -180,19 +180,33 @@ const IndexPage = () => {
 					align: "right",
 					width: "5%",
 					render: (value, record) => (
-						<InputNumber
+						//<InputNumber
+						//	type="number"
+						//	defaultValue={record.prices[0]?.margin || ""}
+						//	suffix="%"
+						//	style={{
+						//		width: "100%",
+						//		border: "0px",
+						//		textAlign: "right",
+						//		justifyItems: "right",
+						//		padding: "0",
+						//		backgroundColor: "transparent",
+						//	}} // Asegura que el input ocupe el ancho completo
+						///>
+						<span
 							type="number"
-							defaultValue={record.prices[0]?.margin || ""}
 							suffix="%"
-							disabled
 							style={{
 								width: "100%",
 								border: "0px",
 								textAlign: "right",
 								justifyItems: "right",
 								padding: "0",
+								backgroundColor: "transparent",
 							}} // Asegura que el input ocupe el ancho completo
-						/>
+						>
+							{record.prices[0]?.margin || ""} %
+						</span>
 					), // Muestra el margen como texto
 				},
 				{
@@ -201,10 +215,23 @@ const IndexPage = () => {
 					key: "netPrice",
 					align: "right",
 					width: "5%",
-					render: (_, record) =>
-						showWithIVA
-							? formatearNumero(record.prices[0]?.netPrice * 1.21)
-							: formatearNumero(record.prices[0]?.netPrice) || "N/A", // Aplica IVA si está activado
+					render: (_, record) => (
+						<span
+							style={{
+								width: "100%",
+								border: "0px",
+								textAlign: "right",
+								justifyItems: "right",
+								padding: "0",
+								backgroundColor: "transparent",
+							}}
+						>
+							{showWithIVA
+								? formatearNumero(record.prices[0]?.netPrice * 1.21)
+								: formatearNumero(record.prices[0]?.netPrice) || "N/A"}{" "}
+							{/* Aplica IVA si está activado */}
+						</span>
+					),
 				},
 				{
 					title: "🆕 Ganancia",
@@ -215,7 +242,8 @@ const IndexPage = () => {
 					render: (value, record) => (
 						<InputNumber
 							type="number"
-							value={newMargins[record.articleId] || 0} // Usar el valor del estado o 0
+							placeholder="test"
+							value={newMargins[record.articleId] || record.prices[0]?.margin} // Usar el valor del estado o 0
 							onChange={(value) => handleNewMarginChange(value, record)} // Manejar el cambio
 							style={{ width: "100%" }} // Asegura que el input ocupe el ancho completo
 						/>
