@@ -1,6 +1,9 @@
 import { UpOutlined, DownOutlined } from "@ant-design/icons"; // Importar íconos
 
 export function formatearNumero(num) {
+	if (num === undefined || num === null) {
+		return "-"; // O cualquier valor predeterminado que desees
+	}
 	// Convierte el número a un string con dos decimales
 	let partes = num.toFixed(2).split(".");
 	const entero = partes[0];
@@ -10,13 +13,9 @@ export function formatearNumero(num) {
 	partes[0] = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 	// Une las partes con la coma para los decimales
-	return (
-		<span>
-			${partes[0]},
-			<span style={{ color: "gray", fontSize: "small" }}>{decimal}</span>
-		</span>
-	);
+	return <span>${partes[0]}</span>;
 }
+
 export function variationFormatter(value) {
 	if (isNaN(value)) {
 		return <span style={{ color: "gray" }}>0</span>;

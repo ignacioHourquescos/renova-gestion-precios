@@ -17,6 +17,9 @@ import {
 	ThunderboltOutlined,
 } from "@ant-design/icons"; // Importar íconos
 import { variationFormatter } from "../utils";
+import NormalTable from "./components/NormalTable";
+import Header from "./components/header/Header";
+import CustomTable from "./components/NormalTable";
 
 const { Option } = Select;
 
@@ -178,185 +181,6 @@ const IndexPage = () => {
 			importedNetCost: importedItem ? importedItem.NetCost : null,
 		};
 	});
-	const columns = [
-		//article
-		{
-			title: "Article ID",
-			dataIndex: "articleId",
-			key: "articleId",
-			width: "10%",
-			//rowScope: "row",
-			fixed: "left",
-		},
-		//description
-		{
-			title: "Description",
-			dataIndex: "description",
-			key: "description",
-			width: "15%",
-			ellipsis: true,
-			//rowScope: "row",
-			fixed: "left",
-		},
-		//cost
-		{
-			title: <h3 style={{ margin: "0", padding: "0" }}>COSTO NETO</h3>,
-			children: [
-				{
-					title: "Costo RP",
-					dataIndex: "netCost",
-					key: "netCost",
-					align: "right",
-					width: "5%",
-					render: (text, record) =>
-						showWithIVA
-							? formatearNumero(record.netCost * 1.21)
-							: formatearNumero(record.netCost), // Aplica IVA si está activado
-				},
-
-				{
-					title: "NUEVO",
-					dataIndex: "importedNetCost",
-					key: "importedNetCost",
-					align: "right",
-					width: "5%",
-					hidden: modificationType == "manual" ? true : false,
-					render: (text) =>
-						loading ? (
-							<Spin size="small" />
-						) : text !== null ? (
-							showWithIVA ? (
-								formatearNumero(text * 1.21) // Aplica IVA si está activado
-							) : (
-								formatearNumero(text)
-							)
-						) : (
-							"-"
-						),
-				},
-				{
-					title: "△",
-					dataIndex: "variation",
-					key: "variation",
-					align: "center",
-					width: "3%",
-					hidden: modificationType == "manual" ? true : false,
-					render: (_, record) => {
-						// Cambia el primer parámetro a "_" para ignorarlo
-						const { importedNetCost, netCost, grossCost } = record; // Desestructuración correcta
-						if (importedNetCost === null || netCost === null) return "-"; // Si no hay valor
-						const value = importedNetCost / grossCost; // Calcular variación
-
-						return variationFormatter(value); // Usar la función variationFormatter
-					},
-				},
-			],
-		},
-		{
-			title: <h3 style={{ margin: "0", padding: "0" }}>LISTA NORMAL</h3>,
-			children: [
-				{
-					title: (
-						<div style={{ display: "flex" }}>
-							<Button
-								icon={<ThunderboltOutlined />}
-								onClick={applyGeneralMargin}
-								style={{ width: "50px" }}
-							/>
-							<InputNumber
-								style={{ marginLeft: 8, width: 100 }}
-								value={generalMargin}
-								onChange={setGeneralMargin}
-								suffix="%"
-								className="percentaje"
-							/>
-						</div>
-					),
-					dataIndex: "newMargin",
-					key: "newMargin",
-					align: "right",
-					width: "5%",
-					render: (value, record) => {
-						const initialMargin = record.prices[0]?.margin;
-						// Si el artículo no tiene un nuevo margen, establecer el margen inicial
-						if (!(record.articleId in newMargins)) {
-							setNewMargins((prev) => ({
-								...prev,
-								[record.articleId]: initialMargin,
-							}));
-						}
-						return (
-							<InputNumber
-								type="number"
-								placeholder="test"
-								value={newMargins[record.articleId] || initialMargin}
-								onChange={(value) => handleNewMarginChange(value, record)}
-								style={{ width: "100%" }}
-								suffix="%"
-								className="percentaje"
-							/>
-						);
-					},
-				},
-				{
-					title: "NUEVO",
-					dataIndex: "newPrice",
-					key: "newPrice",
-					align: "right",
-					width: "5%",
-					render: (_, record) => {
-						// Calcular el nuevo precio utilizando newMargins o el margen inicial
-
-						const newPrice =
-							modificationType == "massive"
-								? newPrices[record.articleId] ||
-								  record.importedNetCost *
-										(1 +
-											(newMargins[record.articleId] ||
-												record.prices[0]?.margin) /
-												100)
-								: record.netCost *
-								  (1 +
-										(newMargins[record.articleId] || record.prices[0]?.margin) /
-											100);
-						return (
-							<>
-								{/* <div>RP - {record.prices[0]?.netPrice.toFixed(0)}</div> */}
-								<div>new - {newPrice.toFixed(0)}</div>
-							</>
-						);
-						return (
-							<span>
-								{showWithIVA
-									? formatearNumero(newPrice * 1.21)
-									: formatearNumero(newPrice) || "N/A"}
-							</span>
-						);
-					},
-				},
-				{
-					title: "△",
-					dataIndex: "newVariation",
-					key: "newVariation",
-					align: "center",
-					width: "3%",
-					render: (_, record) => {
-						const value =
-							modificationType == "massive"
-								? newPrices[record.articleId] / record.prices[0].netPrice
-								: (record.netCost *
-										(1 +
-											(newMargins[record.articleId] ||
-												record.prices[0]?.margin) /
-												100)) /
-								  record.prices[0].netPrice;
-
-						return <>{variationFormatter(value)}</>;
-					},
-				},
-			],
-		},
-	];
 
 	const handleModalClose = () => {
 		setIsModalVisible(false); // Cerrar el modal
@@ -364,70 +188,30 @@ const IndexPage = () => {
 
 	return (
 		<>
-			<Modal
-				title="Seleccione una opción"
-				visible={isModalVisible}
-				onCancel={handleModalClose}
-				footer={null}
-			>
-				<Button
-					type="primary"
-					onClick={() => {
-						handleModalClose();
-						setModificationType("manual");
-						// Acción para "Modificación Manual"
-					}}
-					block
-				>
-					Modificación Manual
-				</Button>
-				<Button
-					type="default"
-					onClick={() => {
-						handleModalClose();
-						setModificationType("massive");
-						// Acción para "Subida de lista de precios"
-					}}
-					block
-					style={{ marginTop: "10px" }}
-				>
-					Subida de lista de precios
-				</Button>
-			</Modal>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "space-between",
-					marginBottom: 16,
-				}}
-			>
-				<input type="file" accept=".xlsx, .xls" onChange={handleImportExcel} />
-				<Select
-					defaultValue={selectedGroup}
-					style={{ width: 200, marginBottom: 16 }}
-					onChange={handleGroupChange}
-				>
-					{groups.map((group) => (
-						<Option key={group.code} value={group.code}>
-							{group.description}
-						</Option>
-					))}
-				</Select>
-				<>
-					<span style={{ margin: "0px" }}>Precios sin IVA</span>
-					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
-					<span style={{ marginLeft: 0 }}>Precios con IVA</span>{" "}
-				</>
-				<Button type="primary" onClick={handleSave}>
-					Guardar
-				</Button>
-			</div>
-			<Table
-				bordered
-				columns={columns}
-				dataSource={mergedData}
-				rowKey="articleId"
-				pagination={{ pageSize: 200 }}
+			<Header // Usar el nuevo componente Header
+				isModalVisible={isModalVisible}
+				handleModalClose={handleModalClose}
+				setModificationType={setModificationType}
+				selectedGroup={selectedGroup}
+				handleGroupChange={handleGroupChange}
+				handleImportExcel={handleImportExcel}
+				showWithIVA={showWithIVA}
+				handleSwitchChange={handleSwitchChange}
+				handleSave={handleSave}
+			/>
+
+			<CustomTable
+				data={data}
+				newMargins={newMargins}
+				setNewMargins={setNewMargins}
+				newPrices={newPrices}
+				modificationType={modificationType}
+				showWithIVA={showWithIVA}
+				handleNewMarginChange={handleNewMarginChange}
+				generalMargin={generalMargin}
+				setGeneralMargin={setGeneralMargin}
+				applyGeneralMargin={applyGeneralMargin}
+				loading={loading}
 			/>
 		</>
 	);
