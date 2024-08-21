@@ -42,7 +42,7 @@ code {
   border-radius:0 !important;
 } 
 
-.ant-table-tbody > tr >td:nth-child(6), .ant-table-tbody > tr >td:nth-child(7), .ant-table-tbody > tr >td:nth-child(3), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2) {
+.ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2) {
   background-color:#F9F9F9 !important;
 } 
 .ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2) {
@@ -63,3 +63,18 @@ code {
    border-radius: 0px !important;
    border:0 !important;
 }
+
+.ant-input-number{
+  border-radius: 0px !important;
+  padding:0 !important;
+  border:0 !important;
+}
+
+.ant-input-number-affix-wrapper{
+  border-radius: 0px !important;
+  padding:0 !important;
+  border:0 !important;
+}
+
+ 
+input.ant-input-number-input{}
