@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, InputNumber, Spin } from "antd";
 import { ThunderboltOutlined } from "@ant-design/icons";
-import { formatearNumero, variationFormatter } from "../../../utils";
+import { formatearNumero, variationFormatter } from "../../../../utils";
 
-const NormalList = ({
+const PriceTable_Normal = ({
 	loading,
 	showWithIVA,
 	applyGeneralMargin,
@@ -16,38 +16,6 @@ const NormalList = ({
 	newPrices,
 }) => {
 	return [
-		{
-			title: "NUEVO",
-			dataIndex: "importedNetCost",
-			key: "importedNetCost",
-			align: "right",
-			width: "5%",
-			render: (text) =>
-				loading ? (
-					<Spin size="small" />
-				) : text !== null ? (
-					showWithIVA ? (
-						formatearNumero(text * 1.21)
-					) : (
-						formatearNumero(text)
-					)
-				) : (
-					"-"
-				),
-		},
-		{
-			title: "△",
-			dataIndex: "variation",
-			key: "variation",
-			align: "center",
-			width: "3%",
-			render: (_, record) => {
-				const { importedNetCost, netCost, grossCost } = record;
-				if (importedNetCost === null || netCost === null) return "-";
-				const value = importedNetCost / grossCost;
-				return variationFormatter(value);
-			},
-		},
 		{
 			title: <h3 style={{ margin: "0", padding: "0" }}>LISTA NORMAL</h3>,
 			children: [
@@ -87,6 +55,8 @@ const NormalList = ({
 								onChange={(value) => handleNewMarginChange(value, record)}
 								style={{ width: "100%" }}
 								suffix="%"
+								precision={2}
+								step={0.01}
 								className="percentaje"
 							/>
 						);
@@ -111,7 +81,11 @@ const NormalList = ({
 								  (1 +
 										(newMargins[record.articleId] || record.prices[0]?.margin) /
 											100);
-						return <div>new - {newPrice.toFixed(0)}</div>;
+						return (
+							<div>
+								<>{formatearNumero(newPrice, showWithIVA)}</>
+							</div>
+						);
 					},
 				},
 				{
@@ -139,4 +113,4 @@ const NormalList = ({
 	];
 };
 
-export default NormalList;
+export default PriceTable_Normal;

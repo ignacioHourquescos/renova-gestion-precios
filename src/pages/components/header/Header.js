@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button, Select, Switch } from "antd";
-import { groups } from "../../dummy_agrupation"; // Ajusta la ruta según la ubicación real
+import { groups } from "../utils/dummy_agrupation"; // Ajusta la ruta según la ubicación real
 
 const { Option } = Select;
 

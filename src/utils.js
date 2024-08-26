@@ -1,6 +1,6 @@
 import { UpOutlined, DownOutlined } from "@ant-design/icons"; // Importar íconos
 
-export function formatearNumero(num) {
+export function formatearNumero(num, showWithIVA) {
 	if (num === undefined || num === null) {
 		return "-"; // O cualquier valor predeterminado que desees
 	}
@@ -13,7 +13,17 @@ export function formatearNumero(num) {
 	partes[0] = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 	// Une las partes con la coma para los decimales
-	return <span>${partes[0]}</span>;
+	return (
+		<>
+			{showWithIVA ? (
+				<span style={{ fontWeight: "bold" }}>
+					${(partes[0] * 1.21).toFixed(0)}
+				</span>
+			) : (
+				<span>${partes[0]}</span>
+			)}
+		</>
+	);
 }
 
 export function variationFormatter(value) {

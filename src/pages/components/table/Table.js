@@ -1,7 +1,10 @@
 import React from "react";
 import { Table, Spin } from "antd";
-import NormalList from "./NormalTable/NormalList"; // Importar el nuevo componente NormalTableColumns
-import { formatearNumero, variationFormatter } from "../../utils";
+import { formatearNumero, variationFormatter } from "../../../utils";
+import NormalList from "./components/PriceTable_RBC";
+import PriceTable_Normal from "./components/PriceTable_Normal";
+import PriceTable_RBC from "./components/PriceTable_RBC";
+
 const CustomTable = ({
 	data,
 	loading,
@@ -14,6 +17,13 @@ const CustomTable = ({
 	handleNewMarginChange,
 	modificationType,
 	newPrices,
+	applyGeneralMarginRBC,
+	generalMarginRBC,
+	setGeneralMarginRBC,
+	newMarginsRBC,
+	setNewMarginsRBC,
+	handleNewMarginChangeRBC,
+	newPricesRBC,
 }) => {
 	const columns = [
 		{
@@ -42,9 +52,7 @@ const CustomTable = ({
 					align: "right",
 					width: "5%",
 					render: (text, record) =>
-						showWithIVA
-							? formatearNumero(record.netCost * 1.21)
-							: formatearNumero(record.netCost),
+						formatearNumero(record.netCost, showWithIVA),
 				},
 				{
 					title: "NUEVO",
@@ -52,25 +60,24 @@ const CustomTable = ({
 					key: "importedNetCost",
 					align: "right",
 					width: "5%",
+					hidden: modificationType == "manual" ? true : false,
 					render: (text) =>
 						loading ? (
 							<Spin size="small" />
 						) : text !== null ? (
-							showWithIVA ? (
-								formatearNumero(text * 1.21)
-							) : (
-								formatearNumero(text)
-							)
+							formatearNumero(text, showWithIVA)
 						) : (
 							"-"
 						),
 				},
+
 				{
 					title: "△",
 					dataIndex: "variation",
 					key: "variation",
 					align: "center",
 					width: "3%",
+					hidden: modificationType == "manual" ? true : false,
 					render: (_, record) => {
 						const { importedNetCost, netCost, grossCost } = record;
 						if (importedNetCost === null || netCost === null) return "-";
@@ -81,15 +88,27 @@ const CustomTable = ({
 			],
 		},
 		// Columnas de LISTA NORMAL
-		...NormalList({
+		...PriceTable_Normal({
 			applyGeneralMargin,
 			generalMargin,
 			setGeneralMargin,
 			newMargins,
 			setNewMargins,
 			handleNewMarginChange,
-			modificationType,
 			newPrices,
+			modificationType,
+			showWithIVA,
+		}),
+		...PriceTable_RBC({
+			applyGeneralMarginRBC, //especifico de lista
+			generalMarginRBC, //especifico de lista
+			setGeneralMarginRBC, //especifico de lista
+			newMarginsRBC, //especifico de lista
+			setNewMarginsRBC, //especifico de lista
+			handleNewMarginChangeRBC, //especifico de lista
+			newPricesRBC, //especifico de lista
+			modificationType,
+			showWithIVA,
 		}),
 	];
 
