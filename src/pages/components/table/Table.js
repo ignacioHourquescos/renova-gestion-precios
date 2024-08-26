@@ -1,5 +1,5 @@
-import React from "react";
-import { Table, Spin } from "antd";
+import React, { useState } from "react";
+import { Table, Spin, Input } from "antd";
 import { formatearNumero, variationFormatter } from "../../../utils";
 import NormalList from "./components/PriceTable_RBC";
 import PriceTable_Normal from "./components/PriceTable_Normal";
@@ -25,20 +25,42 @@ const CustomTable = ({
 	handleNewMarginChangeRBC,
 	newPricesRBC,
 }) => {
+	const [searchText, setSearchText] = useState("");
+	const filteredData = data.filter(
+		(item) =>
+			item.articleId.toString().includes(searchText) ||
+			item.description.toString().includes(searchText)
+	);
+
 	const columns = [
 		{
-			title: "CÓDIGO",
-			dataIndex: "articleId",
-			key: "articleId",
-			align: "left",
-			width: "10%",
-		},
-		{
-			title: "DESCRIPCIÓN",
-			dataIndex: "description",
-			key: "description",
-			align: "left",
-			width: "30%",
+			title: (
+				<div>
+					<Input
+						placeholder="Buscar por Código"
+						style={{ width: 120, marginLeft: 8 }}
+						onChange={(e) => setSearchText(e.target.value)}
+					/>
+				</div>
+			),
+			width: "5%",
+			children: [
+				{
+					title: "CODIGO",
+					dataIndex: "articleId",
+					key: "articleId",
+					align: "left",
+					width: "10%",
+				},
+				{
+					title: "DESCRIPCIÓN",
+					dataIndex: "description",
+					key: "description",
+					align: "left",
+					width: "10%",
+					ellipsis: true,
+				},
+			],
 		},
 
 		// Columnas de COSTO
@@ -110,13 +132,35 @@ const CustomTable = ({
 			modificationType,
 			showWithIVA,
 		}),
+		...PriceTable_RBC({
+			applyGeneralMarginRBC, //especifico de lista
+			generalMarginRBC, //especifico de lista
+			setGeneralMarginRBC, //especifico de lista
+			newMarginsRBC, //especifico de lista
+			setNewMarginsRBC, //especifico de lista
+			handleNewMarginChangeRBC, //especifico de lista
+			newPricesRBC, //especifico de lista
+			modificationType,
+			showWithIVA,
+		}),
+		...PriceTable_RBC({
+			applyGeneralMarginRBC, //especifico de lista
+			generalMarginRBC, //especifico de lista
+			setGeneralMarginRBC, //especifico de lista
+			newMarginsRBC, //especifico de lista
+			setNewMarginsRBC, //especifico de lista
+			handleNewMarginChangeRBC, //especifico de lista
+			newPricesRBC, //especifico de lista
+			modificationType,
+			showWithIVA,
+		}),
 	];
 
 	return (
 		<Table
 			bordered
 			columns={columns}
-			dataSource={data}
+			dataSource={filteredData} // Usa los datos filtrados
 			rowKey="articleId"
 			pagination={{ pageSize: 200 }}
 		/>

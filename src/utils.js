@@ -5,7 +5,7 @@ export function formatearNumero(num, showWithIVA) {
 		return "-"; // O cualquier valor predeterminado que desees
 	}
 	// Convierte el número a un string con dos decimales
-	let partes = num.toFixed(2).split(".");
+	let partes = num.toFixed(2).split(",");
 	const entero = partes[0];
 	const decimal = partes[1];
 

@@ -45,13 +45,19 @@ code {
 .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2) {
   background-color:#F9F9F9 !important;
 } 
+
+.ant-table-tbody > tr >td:nth-child(3),.ant-table-tbody > tr >td:nth-child(6),.ant-table-tbody > tr >td:nth-child(9),.ant-table-tbody > tr >td:nth-child(12), .ant-table-tbody > tr >td:nth-child(15)   {
+  border-right: 2px solid rgb(0, 0, 0)! important;
+} 
+
+
 .ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2) {
   padding: 0.2rem !important;
   background-color: #F5F5F5 !important;
 }
 .ant-table-thead > tr> th {
   padding: 0.2rem !important;
-  border: 1px solid black !important;
+  border-right: 2px solid black !important;
   border-radius: 0px !important;
 
 }

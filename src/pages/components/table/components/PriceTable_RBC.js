@@ -28,7 +28,7 @@ const PriceTable_RBC = ({
 								style={{ width: "50px" }}
 							/>
 							<InputNumber
-								style={{ marginLeft: 8, width: 100 }}
+								style={{ marginLeft: 8, width: 50 }}
 								value={generalMarginRBC}
 								onChange={setGeneralMarginRBC}
 								suffix="%"
@@ -39,7 +39,7 @@ const PriceTable_RBC = ({
 					dataIndex: "newMarginRBC",
 					key: "newMarginRBC",
 					align: "right",
-					width: "5%",
+					width: "3%",
 					render: (value, record) => {
 						const initialMargin = record.prices[0]?.margin;
 						if (!(record.articleId in newMarginsRBC)) {
@@ -65,7 +65,7 @@ const PriceTable_RBC = ({
 					dataIndex: "newPriceRBC",
 					key: "newPriceRBC",
 					align: "right",
-					width: "5%",
+					width: "3%",
 					render: (_, record) => {
 						const newPrice =
 							modificationType === "massive"

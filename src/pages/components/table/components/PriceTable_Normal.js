@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, InputNumber, Spin } from "antd";
 import { ThunderboltOutlined } from "@ant-design/icons";
 import { formatearNumero, variationFormatter } from "../../../../utils";
@@ -15,31 +15,39 @@ const PriceTable_Normal = ({
 	modificationType,
 	newPrices,
 }) => {
+	const [discount, setDiscount] = useState(0);
 	return [
 		{
 			title: <h3 style={{ margin: "0", padding: "0" }}>LISTA NORMAL</h3>,
 			children: [
 				{
 					title: (
-						<div style={{ display: "flex" }}>
-							<Button
-								icon={<ThunderboltOutlined />}
-								onClick={applyGeneralMargin}
-								style={{ width: "50px" }}
-							/>
-							<InputNumber
-								style={{ marginLeft: 8, width: 100 }}
-								value={generalMargin}
-								onChange={setGeneralMargin}
-								suffix="%"
-								className="percentaje"
-							/>
-						</div>
+						<>
+							{" "}
+							<div>%GANANCIA</div>
+							<div style={{ display: "flex" }}>
+								<Button
+									icon={<ThunderboltOutlined />}
+									onClick={applyGeneralMargin}
+									style={{ width: "50px" }}
+								/>
+								<InputNumber
+									style={{
+										marginLeft: 8,
+										width: 50,
+									}}
+									value={generalMargin}
+									onChange={setGeneralMargin}
+									suffix="%"
+									className="percentaje"
+								/>
+							</div>
+						</>
 					),
 					dataIndex: "newMargin",
 					key: "newMargin",
 					align: "right",
-					width: "5%",
+					width: "3%",
 					render: (value, record) => {
 						const initialMargin = record.prices[0]?.margin;
 						if (!(record.articleId in newMargins)) {
@@ -63,11 +71,27 @@ const PriceTable_Normal = ({
 					},
 				},
 				{
-					title: "NUEVO",
+					title: (
+						<>
+							{" "}
+							<div>NUEVO</div>
+							<div style={{ display: "flex", alignItems: "center" }}>
+								<InputNumber
+									type="number"
+									style={{ marginLeft: 8, width: 80 }}
+									placeholder="Descuento %"
+									onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
+									suffix="%"
+									precision={2}
+									step={0.01}
+								/>
+							</div>
+						</>
+					),
 					dataIndex: "newPrice",
 					key: "newPrice",
 					align: "right",
-					width: "5%",
+					width: "3%",
 					render: (_, record) => {
 						const newPrice =
 							modificationType === "massive"
@@ -80,7 +104,8 @@ const PriceTable_Normal = ({
 								: record.netCost *
 								  (1 +
 										(newMargins[record.articleId] || record.prices[0]?.margin) /
-											100);
+											100) *
+								  (1 - discount / 100);
 						return (
 							<div>
 								<>{formatearNumero(newPrice, showWithIVA)}</>
