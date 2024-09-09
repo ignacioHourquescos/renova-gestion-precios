@@ -254,7 +254,7 @@ const IndexPage = () => {
 
 			<CustomTable
 				searchText={searchText}
-				data={mergedData}
+				data={data}
 				loading={loading}
 				showWithIVA={showWithIVA}
 				modificationType={modificationType}

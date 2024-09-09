@@ -1,9 +1,9 @@
 import React from "react";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer } = Layout;
-const items = new Array(2).fill(null).map((_, index) => ({
-	key: index + 1,
-	label: `nav ${index + 1}`,
+const items = new Array(1).fill(null).map((_, index) => ({
+	key: 1,
+	label: `Gestion de precios`,
 }));
 
 const LayoutCustom = ({ children }) => {
@@ -11,25 +11,11 @@ const LayoutCustom = ({ children }) => {
 		token: { colorBgContainer, borderRadiusLG },
 	} = theme.useToken();
 	return (
-		<Layout>
-			<Header
-				style={{
-					display: "flex",
-					alignItems: "center",
-				}}
-			>
-				<div className="demo-logo" />
-				<Menu
-					theme="dark"
-					mode="horizontal"
-					defaultSelectedKeys={["2"]}
-					items={items}
-					style={{
-						flex: 1,
-						minWidth: 0,
-					}}
-				/>
-			</Header>
+		<Layout
+			style={{
+				backgroundColor: "blue !important",
+			}}
+		>
 			<Content
 				style={{
 					padding: "0 48px",
@@ -39,11 +25,7 @@ const LayoutCustom = ({ children }) => {
 					style={{
 						margin: "16px 0",
 					}}
-				>
-					<Breadcrumb.Item>Home</Breadcrumb.Item>
-					<Breadcrumb.Item>List</Breadcrumb.Item>
-					<Breadcrumb.Item>Layoutp</Breadcrumb.Item>
-				</Breadcrumb>
+				></Breadcrumb>
 				<div
 					style={{
 						background: colorBgContainer,
@@ -55,13 +37,6 @@ const LayoutCustom = ({ children }) => {
 					{children}
 				</div>
 			</Content>
-			<Footer
-				style={{
-					textAlign: "center",
-				}}
-			>
-				Ant Design ©{new Date().getFullYear()} Created by Ant UED
-			</Footer>
 		</Layout>
 	);
 };

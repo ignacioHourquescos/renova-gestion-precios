@@ -121,39 +121,17 @@ const CustomTable = ({
 			modificationType,
 			showWithIVA,
 		}),
-		...PriceTable_RBC({
-			applyGeneralMarginRBC, //especifico de lista
-			generalMarginRBC, //especifico de lista
-			setGeneralMarginRBC, //especifico de lista
-			newMarginsRBC, //especifico de lista
-			setNewMarginsRBC, //especifico de lista
-			handleNewMarginChangeRBC, //especifico de lista
-			newPricesRBC, //especifico de lista
+		...PriceTable_Normal({
+			applyGeneralMargin: applyGeneralMarginRBC, //especifico de lista
+			generalMargin: generalMarginRBC, //especifico de lista
+			setGeneralMargin: setGeneralMarginRBC, //especifico de lista
+			newMargins: newMarginsRBC, //especifico de lista
+			setNewMargins: setNewMarginsRBC, //especifico de lista
+			handleNewMarginChange: handleNewMarginChangeRBC, //especifico de lista
+			newPrices: newPricesRBC, //especifico de lista
 			modificationType,
 			showWithIVA,
 		}),
-		//...PriceTable_RBC({
-		//	applyGeneralMarginRBC, //especifico de lista
-		//	generalMarginRBC, //especifico de lista
-		//	setGeneralMarginRBC, //especifico de lista
-		//	newMarginsRBC, //especifico de lista
-		//	setNewMarginsRBC, //especifico de lista
-		//	handleNewMarginChangeRBC, //especifico de lista
-		//	newPricesRBC, //especifico de lista
-		//	modificationType,
-		//	showWithIVA,
-		//}),
-		//...PriceTable_RBC({
-		//	applyGeneralMarginRBC, //especifico de lista
-		//	generalMarginRBC, //especifico de lista
-		//	setGeneralMarginRBC, //especifico de lista
-		//	newMarginsRBC, //especifico de lista
-		//	setNewMarginsRBC, //especifico de lista
-		//	handleNewMarginChangeRBC, //especifico de lista
-		//	newPricesRBC, //especifico de lista
-		//	modificationType,
-		//	showWithIVA,
-		//}),
 	];
 
 	return (

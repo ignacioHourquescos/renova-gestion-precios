@@ -36,6 +36,9 @@ code {
   padding: 0.1rem 0.2rem !important; /* Padding */
   border-radius: 0 !important; /* Border radius */
 }
+
+
+
 .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2) {
   background-color:#F9F9F9 !important;
 } 
@@ -44,10 +47,15 @@ code {
 } 
 */
 
-.ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2) {
-  padding: 0.2rem !important;
-  background-color: #F5F5F5 !important;
+.ant-table-thead > tr> th{
+  background-color: rgb(216, 216, 216) !important;
 }
+.ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2),.ant-table-thead > tr:first-child  > th:nth-child(3),.ant-table-thead > tr:first-child  > th:nth-child(4),.ant-table-thead > tr:first-child  > th:nth-child(5)  {
+  padding: 0.2rem !important;
+  background-color: rgb(243, 75, 14) !important;
+}
+
+
 .ant-table-thead > tr> th {
   padding: 0.2rem !important;
   border-right: 2px solid black !important;
@@ -75,3 +83,16 @@ code {
 }
 
  
+.ant-layout{
+  background-color:gray !important;
+
+  min-height: 100vh !important;
+}
+
+.ant-input-outlined{
+  border-color:  black !important;
+}
+
+.ant-select-selector {border-color: black !important;}
+.ant-input-number-input{border-color: black !important;}
+

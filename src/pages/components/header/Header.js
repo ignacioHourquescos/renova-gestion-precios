@@ -88,7 +88,7 @@ const Header = ({
 				<Option value="" disabled>
 					Agrupacion
 				</Option>
-				<Title>Seleccionar Tipo de aumento</Title>
+
 				<Button
 					type="primary"
 					onClick={() => {
@@ -97,18 +97,7 @@ const Header = ({
 					}}
 					block
 				>
-					Modificación Manual
-				</Button>
-				<Button
-					type="primary"
-					onClick={() => {
-						handleModalClose();
-						setModificationType("massive");
-					}}
-					block
-					style={{ marginTop: "10px" }}
-				>
-					Subida de lista de precios
+					OK
 				</Button>
 			</Modal>
 		</>
