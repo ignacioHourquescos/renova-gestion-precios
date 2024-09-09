@@ -24,25 +24,25 @@ const CustomTable = ({
 	setNewMarginsRBC,
 	handleNewMarginChangeRBC,
 	newPricesRBC,
+	searchText,
+	setSearchText,
 }) => {
-	const [searchText, setSearchText] = useState("");
-	const filteredData = data.filter(
-		(item) =>
-			item.articleId.toString().includes(searchText) ||
-			item.description.toString().includes(searchText)
+	const filteredData = data.filter((item) =>
+		searchText.length >= 3
+			? item.articleId
+					.toString()
+					.toLowerCase()
+					.includes(searchText.toLowerCase()) ||
+			  item.description
+					.toString()
+					.toLowerCase()
+					.includes(searchText.toLowerCase())
+			: true
 	);
 
 	const columns = [
 		{
-			title: (
-				<div>
-					<Input
-						placeholder="Buscar por Código"
-						style={{ width: 120, marginLeft: 8 }}
-						onChange={(e) => setSearchText(e.target.value)}
-					/>
-				</div>
-			),
+			title: "ARTICULO",
 			width: "5%",
 			children: [
 				{
@@ -132,32 +132,33 @@ const CustomTable = ({
 			modificationType,
 			showWithIVA,
 		}),
-		...PriceTable_RBC({
-			applyGeneralMarginRBC, //especifico de lista
-			generalMarginRBC, //especifico de lista
-			setGeneralMarginRBC, //especifico de lista
-			newMarginsRBC, //especifico de lista
-			setNewMarginsRBC, //especifico de lista
-			handleNewMarginChangeRBC, //especifico de lista
-			newPricesRBC, //especifico de lista
-			modificationType,
-			showWithIVA,
-		}),
-		...PriceTable_RBC({
-			applyGeneralMarginRBC, //especifico de lista
-			generalMarginRBC, //especifico de lista
-			setGeneralMarginRBC, //especifico de lista
-			newMarginsRBC, //especifico de lista
-			setNewMarginsRBC, //especifico de lista
-			handleNewMarginChangeRBC, //especifico de lista
-			newPricesRBC, //especifico de lista
-			modificationType,
-			showWithIVA,
-		}),
+		//...PriceTable_RBC({
+		//	applyGeneralMarginRBC, //especifico de lista
+		//	generalMarginRBC, //especifico de lista
+		//	setGeneralMarginRBC, //especifico de lista
+		//	newMarginsRBC, //especifico de lista
+		//	setNewMarginsRBC, //especifico de lista
+		//	handleNewMarginChangeRBC, //especifico de lista
+		//	newPricesRBC, //especifico de lista
+		//	modificationType,
+		//	showWithIVA,
+		//}),
+		//...PriceTable_RBC({
+		//	applyGeneralMarginRBC, //especifico de lista
+		//	generalMarginRBC, //especifico de lista
+		//	setGeneralMarginRBC, //especifico de lista
+		//	newMarginsRBC, //especifico de lista
+		//	setNewMarginsRBC, //especifico de lista
+		//	handleNewMarginChangeRBC, //especifico de lista
+		//	newPricesRBC, //especifico de lista
+		//	modificationType,
+		//	showWithIVA,
+		//}),
 	];
 
 	return (
 		<Table
+			class="table-custom"
 			bordered
 			columns={columns}
 			dataSource={filteredData} // Usa los datos filtrados

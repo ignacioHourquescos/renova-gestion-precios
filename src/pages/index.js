@@ -6,7 +6,7 @@ import CustomTable from "./components/table/Table";
 
 const IndexPage = () => {
 	const [data, setData] = useState([]);
-	const [selectedGroup, setSelectedGroup] = useState(1); // Agrupación por defecto
+	const [selectedGroup, setSelectedGroup] = useState(null); // Cambiar a null para indicar que no hay selección
 	const [showWithIVA, setShowWithIVA] = useState(false); // Estado para el Switch
 	const [importedData, setImportedData] = useState([]); // Estado para los datos importados
 	const [loading, setLoading] = useState(false); // Estado para controlar la carga
@@ -24,19 +24,22 @@ const IndexPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`http://localhost:4000/api/articles/articles?agrupation=${selectedGroup}`
-				);
-				const result = await response.json();
-				console.log(result);
-				setData(result);
-			} catch (error) {
-				console.error("Error fetching data:", error);
+			if (selectedGroup) {
+				// Verifica si hay una agrupación seleccionada
+				try {
+					const response = await fetch(
+						`http://localhost:4000/api/articles/articles?agrupation=${selectedGroup}`
+					);
+					const result = await response.json();
+					console.log(result);
+					setData(result);
+				} catch (error) {
+					console.error("Error fetching data:", error);
+				}
 			}
 		};
 		fetchData();
-	}, [selectedGroup]);
+	}, [selectedGroup]); // Dependencia de selectedGroup
 
 	const handleSave = async (modificationType) => {
 		var payload = null;
@@ -232,7 +235,7 @@ const IndexPage = () => {
 	const handleModalClose = () => {
 		setIsModalVisible(false); // Cerrar el modal
 	};
-
+	const [searchText, setSearchText] = useState("");
 	return (
 		<>
 			<Header // Usar el nuevo componente Header
@@ -245,10 +248,13 @@ const IndexPage = () => {
 				showWithIVA={showWithIVA}
 				handleSwitchChange={handleSwitchChange}
 				handleSave={handleSave}
+				setSearchText={setSearchText}
+				modificationType={modificationType}
 			/>
 
 			<CustomTable
-				data={data}
+				searchText={searchText}
+				data={mergedData}
 				loading={loading}
 				showWithIVA={showWithIVA}
 				modificationType={modificationType}

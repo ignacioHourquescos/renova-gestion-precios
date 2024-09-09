@@ -4,26 +4,25 @@ export function formatearNumero(num, showWithIVA) {
 	if (num === undefined || num === null) {
 		return "-"; // O cualquier valor predeterminado que desees
 	}
+	console.log("numero", num);
+	console.log("showWithIVA", showWithIVA);
 	// Convierte el número a un string con dos decimales
-	let partes = num.toFixed(2).split(",");
-	const entero = partes[0];
-	const decimal = partes[1];
-
-	// Añade el separador de miles
-	partes[0] = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 	// Une las partes con la coma para los decimales
 	return (
 		<>
 			{showWithIVA ? (
 				<span style={{ fontWeight: "bold" }}>
-					${(partes[0] * 1.21).toFixed(0)}
+					${agregarSeparadorMiles((num * 1.21).toFixed(0))}
 				</span>
 			) : (
-				<span>${partes[0]}</span>
+				<span>${agregarSeparadorMiles(num.toFixed(0))}</span>
 			)}
 		</>
 	);
+}
+function agregarSeparadorMiles(numero) {
+	return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 export function variationFormatter(value) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, InputNumber, Spin } from "antd";
-import { ThunderboltOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
 import { formatearNumero, variationFormatter } from "../../../../utils";
+import ThunderInput from "./componentes/ThunderInput";
 
 const PriceTable_Normal = ({
 	loading,
@@ -26,20 +26,10 @@ const PriceTable_Normal = ({
 							{" "}
 							<div>%GANANCIA</div>
 							<div style={{ display: "flex" }}>
-								<Button
-									icon={<ThunderboltOutlined />}
+								<ThunderInput
 									onClick={applyGeneralMargin}
-									style={{ width: "50px" }}
-								/>
-								<InputNumber
-									style={{
-										marginLeft: 8,
-										width: 50,
-									}}
 									value={generalMargin}
 									onChange={setGeneralMargin}
-									suffix="%"
-									className="percentaje"
 								/>
 							</div>
 						</>
@@ -78,7 +68,7 @@ const PriceTable_Normal = ({
 							<div style={{ display: "flex", alignItems: "center" }}>
 								<InputNumber
 									type="number"
-									style={{ marginLeft: 8, width: 80 }}
+									style={{ marginLeft: 8, width: 100 }}
 									placeholder="Descuento %"
 									onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
 									suffix="%"
@@ -108,7 +98,7 @@ const PriceTable_Normal = ({
 								  (1 - discount / 100);
 						return (
 							<div>
-								<>{formatearNumero(newPrice, showWithIVA)}</>
+								<> {formatearNumero(newPrice, showWithIVA)}</>
 							</div>
 						);
 					},
