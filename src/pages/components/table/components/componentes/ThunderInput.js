@@ -16,14 +16,14 @@ const ThunderInput = ({
 			}}
 		>
 			<Button
+				type="link"
 				icon={<ThunderboltOutlined />} // Fixed icon
 				onClick={onClick} // Use the passed onClick handler
-				type="primary" // Fixed button type
 			/>
 			<InputNumber
 				style={{
 					marginLeft: 8,
-					width: "70%",
+					width: "100%",
 				}}
 				value={value} // Use the passed value
 				onChange={onChange} // Use the passed onChange handler

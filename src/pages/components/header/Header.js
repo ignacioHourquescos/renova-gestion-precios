@@ -11,12 +11,10 @@ const Header = ({
 	setModificationType,
 	selectedGroup,
 	handleGroupChange,
-	handleImportExcel,
 	showWithIVA,
 	handleSwitchChange,
 	handleSave,
 	setSearchText,
-	modificationType,
 }) => {
 	return (
 		<>
@@ -53,13 +51,7 @@ const Header = ({
 					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
 					<span style={{ marginLeft: 0 }}>Precios con IVA</span>
 				</div>
-				{modificationType === "massive" && (
-					<input
-						type="file"
-						accept=".xlsx, .xls"
-						onChange={handleImportExcel}
-					/>
-				)}
+
 				<Button type="primary" onClick={handleSave}>
 					Guardar
 				</Button>
@@ -78,6 +70,10 @@ const Header = ({
 					onChange={handleGroupChange}
 					placeholder="Seleccion agrupación"
 					style={{ width: "100%", marginBottom: 16 }} // Cambiado a 100%
+					showSearch
+					filterOption={(input, option) =>
+						option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+					}
 				>
 					{groups.map((group) => (
 						<Option key={group.code} value={group.code}>

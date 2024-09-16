@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { Table, Spin, Input } from "antd";
-import { formatearNumero, variationFormatter } from "../../../utils";
-import NormalList from "./components/PriceTable_RBC";
+import React from "react";
+import { Table } from "antd";
+import { formatearNumero } from "../../../utils";
+
 import PriceTable_Normal from "./components/PriceTable_Normal";
-import PriceTable_RBC from "./components/PriceTable_RBC";
 
 const CustomTable = ({
 	data,
-	loading,
+
 	showWithIVA,
 	applyGeneralMargin,
 	generalMargin,
@@ -25,7 +24,6 @@ const CustomTable = ({
 	handleNewMarginChangeRBC,
 	newPricesRBC,
 	searchText,
-	setSearchText,
 }) => {
 	const filteredData = data.filter((item) =>
 		searchText.length >= 3
@@ -76,41 +74,11 @@ const CustomTable = ({
 					render: (text, record) =>
 						formatearNumero(record.netCost, showWithIVA),
 				},
-				{
-					title: "NUEVO",
-					dataIndex: "importedNetCost",
-					key: "importedNetCost",
-					align: "right",
-					width: "5%",
-					hidden: modificationType == "manual" ? true : false,
-					render: (text) =>
-						loading ? (
-							<Spin size="small" />
-						) : text !== null ? (
-							formatearNumero(text, showWithIVA)
-						) : (
-							"-"
-						),
-				},
-
-				{
-					title: "△",
-					dataIndex: "variation",
-					key: "variation",
-					align: "center",
-					width: "3%",
-					hidden: modificationType == "manual" ? true : false,
-					render: (_, record) => {
-						const { importedNetCost, netCost, grossCost } = record;
-						if (importedNetCost === null || netCost === null) return "-";
-						const value = importedNetCost / grossCost;
-						return variationFormatter(value);
-					},
-				},
 			],
 		},
 		// Columnas de LISTA NORMAL
 		...PriceTable_Normal({
+			name: "LISTA NORMAL",
 			applyGeneralMargin,
 			generalMargin,
 			setGeneralMargin,
@@ -120,17 +88,7 @@ const CustomTable = ({
 			newPrices,
 			modificationType,
 			showWithIVA,
-		}),
-		...PriceTable_Normal({
-			applyGeneralMargin: applyGeneralMarginRBC, //especifico de lista
-			generalMargin: generalMarginRBC, //especifico de lista
-			setGeneralMargin: setGeneralMarginRBC, //especifico de lista
-			newMargins: newMarginsRBC, //especifico de lista
-			setNewMargins: setNewMarginsRBC, //especifico de lista
-			handleNewMarginChange: handleNewMarginChangeRBC, //especifico de lista
-			newPrices: newPricesRBC, //especifico de lista
-			modificationType,
-			showWithIVA,
+			index: 2,
 		}),
 	];
 

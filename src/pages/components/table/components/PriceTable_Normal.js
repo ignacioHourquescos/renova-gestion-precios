@@ -4,7 +4,8 @@ import { formatearNumero, variationFormatter } from "../../../../utils";
 import ThunderInput from "./componentes/ThunderInput";
 
 const PriceTable_Normal = ({
-	loading,
+	name,
+
 	showWithIVA,
 	applyGeneralMargin,
 	generalMargin,
@@ -12,24 +13,24 @@ const PriceTable_Normal = ({
 	newMargins,
 	setNewMargins,
 	handleNewMarginChange,
-	modificationType,
-	newPrices,
+
+	index,
 }) => {
 	const [discount, setDiscount] = useState(0);
 	return [
 		{
-			title: <h3 style={{ margin: "0", padding: "0" }}>LISTA NORMAL</h3>,
+			title: <h3 style={{ margin: "0", padding: "0" }}>{name}</h3>,
 			children: [
 				{
 					title: (
 						<>
-							{" "}
 							<div>%GANANCIA</div>
 							<div style={{ display: "flex" }}>
 								<ThunderInput
-									onClick={applyGeneralMargin}
+									onClick={(index) => applyGeneralMargin(index)}
 									value={generalMargin}
 									onChange={setGeneralMargin}
+									type="secondary"
 								/>
 							</div>
 						</>
@@ -39,7 +40,7 @@ const PriceTable_Normal = ({
 					align: "right",
 					width: "3%",
 					render: (value, record) => {
-						const initialMargin = record.prices[0]?.margin;
+						const initialMargin = record.prices[index]?.margin;
 						if (!(record.articleId in newMargins)) {
 							setNewMargins((prev) => ({
 								...prev,
@@ -83,22 +84,13 @@ const PriceTable_Normal = ({
 					align: "right",
 					width: "3%",
 					render: (_, record) => {
-						const newPrice =
-							modificationType === "massive"
-								? newPrices[record.articleId] ||
-								  record.importedNetCost *
-										(1 +
-											(newMargins[record.articleId] ||
-												record.prices[0]?.margin) /
-												100)
-								: record.netCost *
-								  (1 +
-										(newMargins[record.articleId] || record.prices[0]?.margin) /
-											100) *
-								  (1 - discount / 100);
+						//prettier-ignore
+						const newPrice =record.netCost *(1 +( record.prices[index]?.margin ||newMargins[record.articleId] ) /100) *(1 - discount / 100);
 						return (
 							<div>
-								<> {formatearNumero(newPrice, showWithIVA)}</>
+								<div>RP:{record.prices[index]?.margin}</div>
+								<div>NEW:{newMargins[record.articleId]}</div>
+								<div> {formatearNumero(newPrice, showWithIVA)}</div>
 							</div>
 						);
 					},
@@ -111,16 +103,29 @@ const PriceTable_Normal = ({
 					width: "3%",
 					render: (_, record) => {
 						const value =
-							modificationType === "massive"
-								? newPrices[record.articleId] / record.prices[0].netPrice
-								: (record.netCost *
-										(1 +
-											(newMargins[record.articleId] ||
-												record.prices[0]?.margin) /
-												100)) /
-								  record.prices[0].netPrice;
+							(record.netCost *
+								(1 +
+									(newMargins[record.articleId] ||
+										record.prices[index]?.margin) /
+										100)) /
+							record.prices[index].netPrice;
 
-						return <>{variationFormatter(value)}</>;
+						return (
+							<div>
+								<div>
+									<div>RP:{record.prices[index].netPrice}</div>
+									<div>
+										NEW:
+										{record.netCost *
+											(1 +
+												(newMargins[record.articleId] ||
+													record.prices[index]?.margin) /
+													100)}
+									</div>
+								</div>
+								<div>{variationFormatter(value)}</div>
+							</div>
+						);
 					},
 				},
 			],

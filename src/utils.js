@@ -4,8 +4,7 @@ export function formatearNumero(num, showWithIVA) {
 	if (num === undefined || num === null) {
 		return "-"; // O cualquier valor predeterminado que desees
 	}
-	console.log("numero", num);
-	console.log("showWithIVA", showWithIVA);
+
 	// Convierte el número a un string con dos decimales
 
 	// Une las partes con la coma para los decimales
