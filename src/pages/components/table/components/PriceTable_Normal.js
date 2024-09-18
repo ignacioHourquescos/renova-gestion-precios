@@ -5,7 +5,6 @@ import ThunderInput from "./componentes/ThunderInput";
 
 const PriceTable_Normal = ({
 	name,
-
 	showWithIVA,
 	applyGeneralMargin,
 	generalMargin,
@@ -13,10 +12,22 @@ const PriceTable_Normal = ({
 	newMargins,
 	setNewMargins,
 	handleNewMarginChange,
-
-	index,
+	listId,
 }) => {
 	const [discount, setDiscount] = useState(0);
+
+	const findPriceByListId = (prices, targetListId) => {
+		const dummyPriceRecord = {
+			listId: 0,
+			netPrice: 0,
+			margin: 0,
+		};
+		return (
+			prices.find((price) => price.listId === targetListId) || {
+				dummyPriceRecord,
+			}
+		);
+	};
 	return [
 		{
 			title: <h3 style={{ margin: "0", padding: "0" }}>{name}</h3>,
@@ -27,7 +38,7 @@ const PriceTable_Normal = ({
 							<div>%GANANCIA</div>
 							<div style={{ display: "flex" }}>
 								<ThunderInput
-									onClick={(index) => applyGeneralMargin(index)}
+									onClick={(listId) => applyGeneralMargin(listId)}
 									value={generalMargin}
 									onChange={setGeneralMargin}
 									type="secondary"
@@ -40,7 +51,8 @@ const PriceTable_Normal = ({
 					align: "right",
 					width: "3%",
 					render: (value, record) => {
-						const initialMargin = record.prices[index]?.margin;
+						const priceInfo = findPriceByListId(record.prices, listId);
+						const initialMargin = priceInfo.margin;
 						if (!(record.articleId in newMargins)) {
 							setNewMargins((prev) => ({
 								...prev,
@@ -85,12 +97,16 @@ const PriceTable_Normal = ({
 					width: "3%",
 					render: (_, record) => {
 						//prettier-ignore
-						const newPrice =record.netCost *(1 +( record.prices[index]?.margin ||newMargins[record.articleId] ) /100) *(1 - discount / 100);
+						const priceInfo = findPriceByListId(record.prices, listId);
+						const newPrice =
+							record.netCost *
+							(1 + (newMargins[record.articleId] || priceInfo.margin) / 100) *
+							(1 - discount / 100);
 						return (
 							<div>
-								<div>RP:{record.prices[index]?.margin}</div>
+								<div>RP:{priceInfo.margin}</div>
 								<div>NEW:{newMargins[record.articleId]}</div>
-								<div> {formatearNumero(newPrice, showWithIVA)}</div>
+								<div>{formatearNumero(newPrice, showWithIVA)}</div>
 							</div>
 						);
 					},
@@ -102,24 +118,23 @@ const PriceTable_Normal = ({
 					align: "center",
 					width: "3%",
 					render: (_, record) => {
+						const priceInfo = findPriceByListId(record.prices, listId);
+
 						const value =
 							(record.netCost *
 								(1 +
-									(newMargins[record.articleId] ||
-										record.prices[index]?.margin) /
-										100)) /
-							record.prices[index].netPrice;
+									(newMargins[record.articleId] || priceInfo.margin) / 100)) /
+							priceInfo.netPrice;
 
 						return (
 							<div>
 								<div>
-									<div>RP:{record.prices[index].netPrice}</div>
+									<div>RP:{priceInfo.netPrice}</div>
 									<div>
 										NEW:
 										{record.netCost *
 											(1 +
-												(newMargins[record.articleId] ||
-													record.prices[index]?.margin) /
+												(newMargins[record.articleId] || priceInfo.margin) /
 													100)}
 									</div>
 								</div>

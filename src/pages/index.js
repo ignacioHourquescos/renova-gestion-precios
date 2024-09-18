@@ -7,17 +7,19 @@ const IndexPage = () => {
 	const [data, setData] = useState([]);
 	const [selectedGroup, setSelectedGroup] = useState(null); // Cambiar a null para indicar que no hay selección
 	const [showWithIVA, setShowWithIVA] = useState(false); // Estado para el Switch
-	const [importedData, setImportedData] = useState([]); // Estado para los datos importados
+
 	const [loading, setLoading] = useState(false); // Estado para controlar la carga
 	const [isModalVisible, setIsModalVisible] = useState(true); // Estado para manejar la visibilidad del modal
 	const [modificationType, setModificationType] = useState();
 	const [reload, setReload] = useState(false);
 
 	const [newMargins, setNewMargins] = useState({}); // Estado para almacenar newMargins
-
 	const [newPrices, setNewPrices] = useState({}); // Estado para almacenar newPrices
-
 	const [generalMargin, setGeneralMargin] = useState(0);
+
+	const [newMarginsRBC, setNewMarginsRBC] = useState({}); // Estado para almacenar newMargins
+	const [newPricesRBC, setNewPricesRBC] = useState({}); // Estado para almacenar newPrices
+	const [generalMarginRBC, setGeneralMarginRBC] = useState(0);
 
 	useEffect(() => {
 		console.log("ENTRO AL USE EFFECT");
@@ -42,6 +44,7 @@ const IndexPage = () => {
 
 	const handleSave = async () => {
 		let payload = null;
+		let payloadRBC = null;
 
 		payload = {
 			articles: data.map((item) => ({
@@ -55,10 +58,19 @@ const IndexPage = () => {
 					item.netCost * (1 + item.prices[2].margin / 100), // Usar el nuevo precio o 0
 			})),
 		};
-		console.log("PAYLOAD DATA ARRAY", payload);
-		console.log("Payload para guardar LISTA NORMAL:", payload.articles[0]);
 
-		console.log("CALCULO NET PRICE", data[0].netCost, data[0].margin);
+		payloadRBC = {
+			articles: data.map((item) => ({
+				articleId: item.articleId,
+				description: item.description,
+				netCost: item.netCost, // Usar el costo neto importado o 0
+				grossCost: item.netCost, // Usar el costo neto importado o 0
+				margin: newMarginsRBC[item.articleId] || 0, // Usar el nuevo margen o 0
+				netPrice:
+					newPricesRBC[item.articleId] ||
+					item.netCost * (1 + item.prices[3].margin / 100), // Usar el nuevo precio o 0
+			})),
+		};
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=2`,
@@ -82,35 +94,66 @@ const IndexPage = () => {
 		} catch (error) {
 			console.error("Error al enviar los datos:", error);
 		}
+
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=2`,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(payloadRBC),
+				}
+			);
+			if (!response.ok) {
+				throw new Error("Error al guardar los datos");
+			}
+			const result = await response.json();
+			notification.success({
+				message: "Lista RBC actualizada ",
+				description: result.message, // Mensaje devuelto por el servidor
+			});
+			setReload((prev) => !prev);
+		} catch (error) {
+			console.error("Error al enviar los datos:", error);
+		}
 	};
 
-	const applyGeneralMargin = (list_id) => {
-		let updatedMargins = {};
-		let updatedPrices = {};
+	const applyGeneralMargin = () => {
+		const updatedMargins = {};
+		const updatedPrices = {};
 		data.forEach((record) => {
-			console.log("RECORD MARGIN FROM RP", record.prices[list_id]?.margin);
-			const articleId = record.articleId;
+			const { articleId, netCost } = record;
 			updatedMargins[articleId] = generalMargin;
-			const calculatedNewPrice = record.netCost * (1 + generalMargin / 100);
-			updatedPrices[articleId] = calculatedNewPrice;
+			updatedPrices[articleId] = netCost * (1 + generalMargin / 100);
 			handleNewMarginChange(generalMargin, record);
 		});
-		console.log("UPDATED MARGIN FROM applyGeneralMargin", updatedMargins);
-		console.log("UPDATED PRICES FROM applyGeneralMargin", updatedPrices);
-		setNewMargins(updatedMargins); // Actualizar el estado de newMargins
-		setNewPrices(updatedPrices); // Actualizar el estado de newPrices
+		setNewMargins(updatedMargins);
+		setNewPrices(updatedPrices);
 	};
 
-	//prettier-ignore
-	const handleNewMarginChange = (value, record) => {
-		let newMargin = value; // Obtener el nuevo margen
-		const calculatedNewPrice =  (record.netCost || 0) * (1 + newMargin / 100); // Calcular el nuevo precio
-		// Actualizar el estado de newMargins y newPrices
-    console.log("NEW MARGINS FROM handleNewMarginChange", newMargins);
-    console.log("NET COST RP FROM handleNewMarginChange", record.netCost);
-    console.log("CALCULATED NEW PRICE FROM handleNewMarginChange", calculatedNewPrice);
-		setNewMargins((prev) => ({...prev,[record.articleId]: newMargin,}));
-		setNewPrices((prev) => ({...prev,[record.articleId]: calculatedNewPrice,}));
+	const applyGeneralMarginRBC = () => {
+		const updatedMargins = {};
+		const updatedPrices = {};
+		data.forEach((record) => {
+			const { articleId, netCost } = record;
+			updatedMargins[articleId] = generalMarginRBC;
+			updatedPrices[articleId] = netCost * (1 + generalMarginRBC / 100);
+			handleNewMarginChangeRBC(generalMarginRBC, record);
+		});
+	};
+
+	const handleNewMarginChange = (newMargin, { articleId, netCost = 0 }) => {
+		const newPrice = netCost * (1 + newMargin / 100);
+		setNewMargins((prev) => ({ ...prev, [articleId]: newMargin }));
+		setNewPrices((prev) => ({ ...prev, [articleId]: newPrice }));
+	};
+
+	const handleNewMarginChangeRBC = (newMargin, { articleId, netCost = 0 }) => {
+		const newPrice = netCost * (1 + newMargin / 100);
+		setNewMarginsRBC((prev) => ({ ...prev, [articleId]: newMargin }));
+		setNewPricesRBC((prev) => ({ ...prev, [articleId]: newPrice }));
 	};
 
 	const handleGroupChange = (value) => {
@@ -123,6 +166,7 @@ const IndexPage = () => {
 	const handleModalClose = () => {
 		setIsModalVisible(false); // Cerrar el modal
 	};
+
 	const [searchText, setSearchText] = useState("");
 	return (
 		<>
@@ -140,24 +184,32 @@ const IndexPage = () => {
 			/>
 
 			<CustomTable
-				searchText={searchText}
-				data={data}
 				loading={loading}
-				showWithIVA={showWithIVA}
+				data={data}
+				searchText={searchText}
 				modificationType={modificationType}
-				//especficio listas
-				setNewMargins={setNewMargins}
-				//especifico de lista
-				handleNewMarginChange={handleNewMarginChange}
-				//especifico de lista
-				generalMargin={generalMargin}
-				//especifico de lista
-				setGeneralMargin={setGeneralMargin}
+				//
 				applyGeneralMargin={applyGeneralMargin}
-				//especifico de lista
+				applyGeneralMarginRBC={applyGeneralMarginRBC}
+				//
+				generalMargin={generalMargin}
+				generalMarginRBC={generalMarginRBC}
+				//
+				handleNewMarginChange={handleNewMarginChange}
+				handleNewMarginChangeRBC={handleNewMarginChangeRBC}
+				//
 				newMargins={newMargins}
-				//especifico de lista
+				newMarginsRBC={newMarginsRBC}
+				//
 				newPrices={newPrices}
+				newPricesRBC={newPricesRBC}
+				//
+				setGeneralMargin={setGeneralMargin}
+				setGeneralMarginRBC={setGeneralMarginRBC}
+				//
+				setNewMargins={setNewMargins}
+				setNewMarginsRBC={setNewMarginsRBC}
+				showWithIVA={showWithIVA}
 			/>
 		</>
 	);
