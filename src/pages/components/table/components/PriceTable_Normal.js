@@ -104,9 +104,13 @@ const PriceTable_Normal = ({
 							(1 - discount / 100);
 						return (
 							<div>
-								<div>RP:{priceInfo.margin}</div>
-								<div>NEW:{newMargins[record.articleId]}</div>
-								<div>{formatearNumero(newPrice, showWithIVA)}</div>
+								{/* <div>RP:{priceInfo.margin}</div> */}
+								{/* <div>NEW:{newMargins[record.articleId]}</div> */}
+								<div>
+									{isNaN(newPrice)
+										? "NO existe"
+										: formatearNumero(newPrice, showWithIVA)}
+								</div>
 							</div>
 						);
 					},
@@ -129,14 +133,14 @@ const PriceTable_Normal = ({
 						return (
 							<div>
 								<div>
-									<div>RP:{priceInfo.netPrice}</div>
-									<div>
-										NEW:
-										{record.netCost *
-											(1 +
-												(newMargins[record.articleId] || priceInfo.margin) /
-													100)}
-									</div>
+									{/* <div>RP:{priceInfo.netPrice}</div> */}
+									{/* <div>
+    NEW:
+    {record.netCost *
+        (1 +
+            (newMargins[record.articleId] || priceInfo.margin) /
+                100)}
+</div> */}
 								</div>
 								<div>{variationFormatter(value)}</div>
 							</div>

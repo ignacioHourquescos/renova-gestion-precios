@@ -21,6 +21,14 @@ const IndexPage = () => {
 	const [newPricesRBC, setNewPricesRBC] = useState({}); // Estado para almacenar newPrices
 	const [generalMarginRBC, setGeneralMarginRBC] = useState(0);
 
+	const [newMarginsCostList, setNewMarginsCostList] = useState({});
+	const [newPricesCostList, setNewPricesCostList] = useState({});
+	const [generalMarginCostList, setGeneralMarginCostList] = useState(0);
+
+	const [newMarginsReseller, setNewMarginsReseller] = useState({});
+	const [newPricesReseller, setNewPricesReseller] = useState({});
+	const [generalMarginReseller, setGeneralMarginReseller] = useState(0);
+
 	useEffect(() => {
 		console.log("ENTRO AL USE EFFECT");
 		setReload();
@@ -43,81 +51,63 @@ const IndexPage = () => {
 	}, [selectedGroup, reload]); // Dependencia de selectedGroup
 
 	const handleSave = async () => {
-		let payload = null;
-		let payloadRBC = null;
-
-		payload = {
+		const createPayload = (data, newMargins, newPrices, priceIndex) => ({
 			articles: data.map((item) => ({
 				articleId: item.articleId,
 				description: item.description,
-				netCost: item.netCost, // Usar el costo neto importado o 0
-				grossCost: item.netCost, // Usar el costo neto importado o 0
-				margin: newMargins[item.articleId] || 0, // Usar el nuevo margen o 0
+				netCost: item.netCost,
+				grossCost: item.netCost,
+				margin: newMargins[item.articleId] || 0,
 				netPrice:
 					newPrices[item.articleId] ||
-					item.netCost * (1 + item.prices[2].margin / 100), // Usar el nuevo precio o 0
+					item.netCost * (1 + item.prices[priceIndex].margin / 100),
 			})),
+		});
+
+		const updateList = async (listId, payload, listName) => {
+			try {
+				const response = await fetch(
+					`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=${listId}`,
+					{
+						method: "PUT",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(payload),
+					}
+				);
+				if (!response.ok)
+					throw new Error(`Error al guardar los datos de ${listName}`);
+				const result = await response.json();
+				notification.success({
+					message: `Lista ${listName} actualizada`,
+					description: result.message,
+					duration: 2, // Duration in seconds
+					stack: false,
+				});
+			} catch (error) {
+				console.error(`Error al enviar los datos de ${listName}:`, error);
+			}
 		};
 
-		payloadRBC = {
-			articles: data.map((item) => ({
-				articleId: item.articleId,
-				description: item.description,
-				netCost: item.netCost, // Usar el costo neto importado o 0
-				grossCost: item.netCost, // Usar el costo neto importado o 0
-				margin: newMarginsRBC[item.articleId] || 0, // Usar el nuevo margen o 0
-				netPrice:
-					newPricesRBC[item.articleId] ||
-					item.netCost * (1 + item.prices[3].margin / 100), // Usar el nuevo precio o 0
-			})),
-		};
-		try {
-			const response = await fetch(
-				`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=2`,
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(payload),
-				}
-			);
-			if (!response.ok) {
-				throw new Error("Error al guardar los datos");
-			}
-			const result = await response.json();
-			notification.success({
-				message: "Lista Normal actualizada ",
-				description: result.message, // Mensaje devuelto por el servidor
-			});
-			setReload((prev) => !prev);
-		} catch (error) {
-			console.error("Error al enviar los datos:", error);
-		}
+		const payload = createPayload(data, newMargins, newPrices, 2);
+		const payloadRBC = createPayload(data, newMarginsRBC, newPricesRBC, 3);
+		const payloadCostList = createPayload(
+			data,
+			newMarginsCostList,
+			newPricesCostList,
+			0
+		);
+		const payloadReseller = createPayload(
+			data,
+			newMarginsReseller,
+			newPricesReseller,
+			1
+		);
 
-		try {
-			const response = await fetch(
-				`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=2`,
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(payloadRBC),
-				}
-			);
-			if (!response.ok) {
-				throw new Error("Error al guardar los datos");
-			}
-			const result = await response.json();
-			notification.success({
-				message: "Lista RBC actualizada ",
-				description: result.message, // Mensaje devuelto por el servidor
-			});
-			setReload((prev) => !prev);
-		} catch (error) {
-			console.error("Error al enviar los datos:", error);
-		}
+		await updateList(2, payload, "Normal");
+		await updateList(3, payloadRBC, "RBC");
+		await updateList(0, payloadCostList, "Cost List");
+		await updateList(1, payloadReseller, "Reseller");
+		setReload((prev) => !prev);
 	};
 
 	const applyGeneralMargin = () => {
@@ -142,6 +132,49 @@ const IndexPage = () => {
 			updatedPrices[articleId] = netCost * (1 + generalMarginRBC / 100);
 			handleNewMarginChangeRBC(generalMarginRBC, record);
 		});
+	};
+	const applyGeneralMarginCostList = () => {
+		const updatedMargins = {};
+		const updatedPrices = {};
+		data.forEach((record) => {
+			const { articleId, netCost } = record;
+			updatedMargins[articleId] = generalMarginCostList;
+			updatedPrices[articleId] = netCost * (1 + generalMarginCostList / 100);
+			handleNewMarginChangeCostList(generalMarginCostList, record);
+		});
+		setNewMarginsCostList(updatedMargins);
+		setNewPricesCostList(updatedPrices);
+	};
+
+	const applyGeneralMarginReseller = () => {
+		const updatedMargins = {};
+		const updatedPrices = {};
+		data.forEach((record) => {
+			const { articleId, netCost } = record;
+			updatedMargins[articleId] = generalMarginReseller;
+			updatedPrices[articleId] = netCost * (1 + generalMarginReseller / 100);
+			handleNewMarginChangeReseller(generalMarginReseller, record);
+		});
+		setNewMarginsReseller(updatedMargins);
+		setNewPricesReseller(updatedPrices);
+	};
+
+	const handleNewMarginChangeCostList = (
+		newMargin,
+		{ articleId, netCost = 0 }
+	) => {
+		const newPrice = netCost * (1 + newMargin / 100);
+		setNewMarginsCostList((prev) => ({ ...prev, [articleId]: newMargin }));
+		setNewPricesCostList((prev) => ({ ...prev, [articleId]: newPrice }));
+	};
+
+	const handleNewMarginChangeReseller = (
+		newMargin,
+		{ articleId, netCost = 0 }
+	) => {
+		const newPrice = netCost * (1 + newMargin / 100);
+		setNewMarginsReseller((prev) => ({ ...prev, [articleId]: newMargin }));
+		setNewPricesReseller((prev) => ({ ...prev, [articleId]: newPrice }));
 	};
 
 	const handleNewMarginChange = (newMargin, { articleId, netCost = 0 }) => {
@@ -188,27 +221,34 @@ const IndexPage = () => {
 				data={data}
 				searchText={searchText}
 				modificationType={modificationType}
-				//
 				applyGeneralMargin={applyGeneralMargin}
 				applyGeneralMarginRBC={applyGeneralMarginRBC}
-				//
+				applyGeneralMarginCostList={applyGeneralMarginCostList}
+				applyGeneralMarginReseller={applyGeneralMarginReseller}
 				generalMargin={generalMargin}
 				generalMarginRBC={generalMarginRBC}
-				//
+				generalMarginCostList={generalMarginCostList}
+				generalMarginReseller={generalMarginReseller}
 				handleNewMarginChange={handleNewMarginChange}
 				handleNewMarginChangeRBC={handleNewMarginChangeRBC}
-				//
+				handleNewMarginChangeCostList={handleNewMarginChangeCostList}
+				handleNewMarginChangeReseller={handleNewMarginChangeReseller}
 				newMargins={newMargins}
 				newMarginsRBC={newMarginsRBC}
-				//
+				newMarginsCostList={newMarginsCostList}
+				newMarginsReseller={newMarginsReseller}
 				newPrices={newPrices}
 				newPricesRBC={newPricesRBC}
-				//
+				newPricesCostList={newPricesCostList}
+				newPricesReseller={newPricesReseller}
 				setGeneralMargin={setGeneralMargin}
 				setGeneralMarginRBC={setGeneralMarginRBC}
-				//
+				setGeneralMarginCostList={setGeneralMarginCostList}
+				setGeneralMarginReseller={setGeneralMarginReseller}
 				setNewMargins={setNewMargins}
 				setNewMarginsRBC={setNewMarginsRBC}
+				setNewMarginsCostList={setNewMarginsCostList}
+				setNewMarginsReseller={setNewMarginsReseller}
 				showWithIVA={showWithIVA}
 			/>
 		</>
