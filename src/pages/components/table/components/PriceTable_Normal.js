@@ -35,7 +35,7 @@ const PriceTable_Normal = ({
 				{
 					title: (
 						<>
-							<div>%GANANCIA</div>
+							<div>%</div>
 							<div style={{ display: "flex" }}>
 								<ThunderInput
 									onClick={(listId) => applyGeneralMargin(listId)}
