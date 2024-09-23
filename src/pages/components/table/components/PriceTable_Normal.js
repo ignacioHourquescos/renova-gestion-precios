@@ -13,6 +13,7 @@ const PriceTable_Normal = ({
 	setNewMargins,
 	handleNewMarginChange,
 	listId,
+	showVariation,
 }) => {
 	const [discount, setDiscount] = useState(0);
 
@@ -35,13 +36,12 @@ const PriceTable_Normal = ({
 				{
 					title: (
 						<>
-							<div>%</div>
+							<div>GANANCIA</div>
 							<div style={{ display: "flex" }}>
 								<ThunderInput
 									onClick={(listId) => applyGeneralMargin(listId)}
 									value={generalMargin}
 									onChange={setGeneralMargin}
-									type="secondary"
 								/>
 							</div>
 						</>
@@ -73,80 +73,84 @@ const PriceTable_Normal = ({
 						);
 					},
 				},
-				{
-					title: (
-						<>
-							{" "}
-							<div>NUEVO</div>
-							<div style={{ display: "flex", alignItems: "center" }}>
-								<InputNumber
-									type="number"
-									style={{ marginLeft: 8, width: 100 }}
-									placeholder="Descuento %"
-									onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
-									suffix="%"
-									precision={2}
-									step={0.01}
-								/>
-							</div>
-						</>
-					),
-					dataIndex: "newPrice",
-					key: "newPrice",
-					align: "right",
-					width: "3%",
-					render: (_, record) => {
-						//prettier-ignore
-						const priceInfo = findPriceByListId(record.prices, listId);
-						const newPrice =
-							record.netCost *
-							(1 + (newMargins[record.articleId] || priceInfo.margin) / 100) *
-							(1 - discount / 100);
-						return (
-							<div>
-								{/* <div>RP:{priceInfo.margin}</div> */}
-								{/* <div>NEW:{newMargins[record.articleId]}</div> */}
-								<div>
-									{isNaN(newPrice)
-										? "NO existe"
-										: formatearNumero(newPrice, showWithIVA)}
-								</div>
-							</div>
-						);
-					},
-				},
-				{
-					title: "△",
-					dataIndex: "newVariation",
-					key: "newVariation",
-					align: "center",
-					width: "3%",
-					render: (_, record) => {
-						const priceInfo = findPriceByListId(record.prices, listId);
+				!showVariation
+					? {
+							title: (
+								<>
+									{" "}
+									<div>PRECIO</div>
+									<div style={{ display: "flex", alignItems: "center" }}>
+										<InputNumber
+											type="number"
+											style={{ paddingLeft: 2, width: 100 }}
+											placeholder="Descuento %"
+											onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
+											suffix="%"
+											precision={2}
+											step={0.01}
+										/>
+									</div>
+								</>
+							),
+							dataIndex: "newPrice",
+							key: "newPrice",
+							align: "right",
+							width: "3%",
+							render: (_, record) => {
+								//prettier-ignore
+								const priceInfo = findPriceByListId(record.prices, listId);
+								const newPrice =
+									record.netCost *
+									(1 +
+										(newMargins[record.articleId] || priceInfo.margin) / 100) *
+									(1 - discount / 100);
+								return (
+									<div>
+										{/* <div>RP:{priceInfo.margin}</div> */}
+										{/* <div>NEW:{newMargins[record.articleId]}</div> */}
+										<div>
+											{isNaN(newPrice)
+												? "NO existe"
+												: formatearNumero(newPrice, showWithIVA)}
+										</div>
+									</div>
+								);
+							},
+					  }
+					: {
+							title: "△",
+							dataIndex: "newVariation",
+							key: "newVariation",
+							align: "right",
+							width: "3%",
 
-						const value =
-							(record.netCost *
-								(1 +
-									(newMargins[record.articleId] || priceInfo.margin) / 100)) /
-							priceInfo.netPrice;
+							render: (_, record) => {
+								const priceInfo = findPriceByListId(record.prices, listId);
 
-						return (
-							<div>
-								<div>
-									{/* <div>RP:{priceInfo.netPrice}</div> */}
-									{/* <div>
+								const value =
+									(record.netCost *
+										(1 +
+											(newMargins[record.articleId] || priceInfo.margin) /
+												100)) /
+									priceInfo.netPrice;
+
+								return (
+									<div>
+										<div>
+											{/* <div>RP:{priceInfo.netPrice}</div> */}
+											{/* <div>
     NEW:
     {record.netCost *
         (1 +
             (newMargins[record.articleId] || priceInfo.margin) /
                 100)}
 </div> */}
-								</div>
-								<div>{variationFormatter(value)}</div>
-							</div>
-						);
-					},
-				},
+										</div>
+										<div>{variationFormatter(value)}</div>
+									</div>
+								);
+							},
+					  },
 			],
 		},
 	];

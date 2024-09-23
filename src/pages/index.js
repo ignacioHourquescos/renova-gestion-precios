@@ -7,6 +7,7 @@ const IndexPage = () => {
 	const [data, setData] = useState([]);
 	const [selectedGroup, setSelectedGroup] = useState(null); // Cambiar a null para indicar que no hay selección
 	const [showWithIVA, setShowWithIVA] = useState(false); // Estado para el Switch
+	const [showVariation, setShowVariation] = useState(false);
 
 	const [loading, setLoading] = useState(false); // Estado para controlar la carga
 	const [isModalVisible, setIsModalVisible] = useState(true); // Estado para manejar la visibilidad del modal
@@ -199,6 +200,9 @@ const IndexPage = () => {
 	const handleModalClose = () => {
 		setIsModalVisible(false); // Cerrar el modal
 	};
+	const handleVariationSwitchChange = (checked) => {
+		setShowVariation(checked);
+	};
 
 	const [searchText, setSearchText] = useState("");
 	return (
@@ -214,9 +218,12 @@ const IndexPage = () => {
 				handleSave={handleSave}
 				setSearchText={setSearchText}
 				modificationType={modificationType}
+				showVariation={showVariation}
+				handleVariationSwitchChange={handleVariationSwitchChange}
 			/>
 
 			<CustomTable
+				showVariation={showVariation}
 				loading={loading}
 				data={data}
 				searchText={searchText}

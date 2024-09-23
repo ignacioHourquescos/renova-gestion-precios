@@ -15,6 +15,8 @@ const Header = ({
 	handleSwitchChange,
 	handleSave,
 	setSearchText,
+	showVariation,
+	handleVariationSwitchChange,
 }) => {
 	return (
 		<>
@@ -47,9 +49,15 @@ const Header = ({
 					</Select>
 				</div>
 				<div>
-					<span style={{ margin: "0px" }}>Precios sin IVA</span>
-					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
+					<span style={{ marginLeft: 8, marginRight: 16 }}>
+						Mostrar variaciones
+					</span>
+					<Switch
+						checked={showVariation}
+						onChange={handleVariationSwitchChange}
+					/>{" "}
 					<span style={{ marginLeft: 0 }}>Precios con IVA</span>
+					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
 				</div>
 
 				<Button type="primary" onClick={handleSave}>

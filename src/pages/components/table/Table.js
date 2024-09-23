@@ -36,6 +36,7 @@ const CustomTable = ({
 	handleNewMarginChangeReseller,
 	newPricesReseller,
 	searchText,
+	showVariation,
 }) => {
 	const filteredData = data.filter((item) =>
 		searchText.length >= 3
@@ -53,7 +54,7 @@ const CustomTable = ({
 	const columns = [
 		{
 			title: "ARTICULO",
-			width: "5%",
+			width: "1%",
 			children: [
 				{
 					title: "CODIGO",
@@ -70,27 +71,28 @@ const CustomTable = ({
 					width: "10%",
 					ellipsis: true,
 				},
+				{
+					title: "COSTO NETO",
+					children: [
+						{
+							title: "Costo RP",
+							dataIndex: "netCost",
+							key: "netCost",
+							align: "right",
+							width: "5%",
+							render: (text, record) =>
+								formatearNumero(record.netCost, showWithIVA),
+						},
+					],
+				},
 			],
 		},
 
 		// Columnas de COSTO
-		{
-			title: "COSTO NETO",
-			children: [
-				{
-					title: "Costo RP",
-					dataIndex: "netCost",
-					key: "netCost",
-					align: "right",
-					width: "5%",
-					render: (text, record) =>
-						formatearNumero(record.netCost, showWithIVA),
-				},
-			],
-		},
+
 		// Columnas de LISTA NORMAL
 		...PriceTable_Normal({
-			name: "COST LIST",
+			name: "LISTA 0",
 			applyGeneralMargin: applyGeneralMarginCostList,
 			generalMargin: generalMarginCostList,
 			setGeneralMargin: setGeneralMarginCostList,
@@ -100,9 +102,10 @@ const CustomTable = ({
 			newPrices: newPricesCostList,
 			showWithIVA,
 			listId: 0,
+			showVariation,
 		}),
 		...PriceTable_Normal({
-			name: "RESELLER",
+			name: "LISTA 1",
 			applyGeneralMargin: applyGeneralMarginReseller,
 			generalMargin: generalMarginReseller,
 			setGeneralMargin: setGeneralMarginReseller,
@@ -112,6 +115,7 @@ const CustomTable = ({
 			newPrices: newPricesReseller,
 			showWithIVA,
 			listId: 1,
+			showVariation,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
@@ -124,9 +128,10 @@ const CustomTable = ({
 			newPrices,
 			showWithIVA,
 			listId: 2,
+			showVariation,
 		}),
 		...PriceTable_Normal({
-			name: "RBC",
+			name: "LISTA RBC",
 			applyGeneralMargin: applyGeneralMarginRBC,
 			generalMargin: generalMarginRBC,
 			setGeneralMargin: setGeneralMarginRBC,
@@ -136,6 +141,7 @@ const CustomTable = ({
 			newPrices: newPricesRBC,
 			showWithIVA,
 			listId: 3,
+			showVariation,
 		}),
 	];
 

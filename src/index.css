@@ -39,7 +39,7 @@ code {
 
 
 
-.ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2) {
+.ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(2), .ant-table-tbody > tr >td:nth-child(1), .ant-table-tbody > tr >td:nth-child(2),.ant-table-tbody > tr >td:nth-child(3) {
   background-color:#F9F9F9 !important;
 } 
 /* .ant-table-tbody > tr >td:nth-child(3),.ant-table-tbody > tr >td:nth-child(6),.ant-table-tbody > tr >td:nth-child(9),.ant-table-tbody > tr >td:nth-child(12), .ant-table-tbody > tr >td:nth-child(15)   {
@@ -47,17 +47,22 @@ code {
 } 
 */
 
+.ant-table-tbody > tr >td:nth-child(3),.ant-table-tbody > tr >td:nth-child(5),.ant-table-tbody > tr >td:nth-child(7),.ant-table-tbody > tr >td:nth-child(9),.ant-table-tbody > tr >td:nth-child(11){
+  border-right: 2px solid black !important;
+}
+
 .ant-table-thead > tr> th{
   background-color: rgb(239, 239, 239) !important;
 }
 .ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2),.ant-table-thead > tr:first-child  > th:nth-child(3),.ant-table-thead > tr:first-child  > th:nth-child(4),.ant-table-thead > tr:first-child  > th:nth-child(5)  {
   padding: 0.2rem !important;
-  background-color: rgb(243, 75, 14) !important;
+  background-color: rgb(231, 96, 51) !important;
+  color: white !important;
 }
 
 
 .ant-table-thead > tr> th {
-  padding: 0.2rem !important;
+  padding: 0 !important;
   border-right: 2px solid black !important;
   border-radius: 0px !important;
 
@@ -84,11 +89,11 @@ code {
 
  
 .ant-layout{
-  background-color:gray !important;
-
+  background-color:rgb(255, 255, 255) !important;
+  padding: 0px !important;
   min-height: 100vh !important;
 }
-
+.ant-layout-content {padding: 0px !important}
 .ant-input-outlined{
   border-color:  black !important;
 }
@@ -96,3 +101,7 @@ code {
 .ant-select-selector {border-color: black !important;}
 .ant-input-number-input{border-color: black !important;}
 
+.ant-breadcrumb{
+  margin: 0px !important;
+  padding:0px !important;
+}
