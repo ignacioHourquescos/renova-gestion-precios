@@ -60,7 +60,7 @@ const IndexPage = () => {
 				margin: newMargins[item.articleId] || 0,
 				netPrice:
 					newPrices[item.articleId] ||
-					item.netCost * (1 + item.prices[priceIndex].margin / 100),
+					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100),
 			})),
 		});
 
