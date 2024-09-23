@@ -37,7 +37,7 @@ const IndexPage = () => {
 				// Verifica si hay una agrupación seleccionada
 				try {
 					const response = await fetch(
-						`http://localhost:4000/api/articles/articles?agrupation=${selectedGroup}`
+						`${process.env.REACT_APP_API_URL}/api/articles/articles?agrupation=${selectedGroup}`
 					);
 					const result = await response.json();
 					console.log(result);
