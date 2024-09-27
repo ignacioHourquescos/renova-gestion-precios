@@ -1,11 +1,13 @@
 import React from "react";
-import { Table } from "antd";
+import { Input, Table } from "antd";
 import { formatearNumero } from "../../../utils";
 
 import PriceTable_Normal from "./components/PriceTable_Normal";
 
 const CustomTable = ({
 	data,
+	modifiedNetCosts,
+	handleNetCostChange,
 	showWithIVA,
 	applyGeneralMargin,
 	generalMargin,
@@ -80,8 +82,19 @@ const CustomTable = ({
 							key: "netCost",
 							align: "right",
 							width: "5%",
-							render: (text, record) =>
-								formatearNumero(record.netCost, showWithIVA),
+							render: (text, record) => (
+								<Input
+									value={modifiedNetCosts[record.articleId] || record.netCost}
+									onChange={(e) =>
+										handleNetCostChange(
+											record.articleId,
+											parseFloat(e.target.value)
+										)
+									}
+									type="number"
+									step="0.01"
+								/>
+							),
 						},
 					],
 				},

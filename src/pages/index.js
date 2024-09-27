@@ -29,7 +29,11 @@ const IndexPage = () => {
 	const [newMarginsReseller, setNewMarginsReseller] = useState({});
 	const [newPricesReseller, setNewPricesReseller] = useState({});
 	const [generalMarginReseller, setGeneralMarginReseller] = useState(0);
+	const [modifiedNetCosts, setModifiedNetCosts] = useState({});
 
+	const handleNetCostChange = (articleId, newNetCost) => {
+		setModifiedNetCosts((prev) => ({ ...prev, [articleId]: newNetCost }));
+	};
 	useEffect(() => {
 		console.log("ENTRO AL USE EFFECT");
 		setReload();
@@ -56,7 +60,7 @@ const IndexPage = () => {
 			articles: data.map((item) => ({
 				articleId: item.articleId,
 				description: item.description,
-				netCost: item.netCost,
+				netCost: modifiedNetCosts[item.articleId] || item.netCost,
 				grossCost: item.netCost,
 				margin: newMargins[item.articleId] || 0,
 				netPrice:
@@ -228,6 +232,8 @@ const IndexPage = () => {
 				data={data}
 				searchText={searchText}
 				modificationType={modificationType}
+				modifiedNetCosts={modifiedNetCosts}
+				handleNetCostChange={handleNetCostChange}
 				applyGeneralMargin={applyGeneralMargin}
 				applyGeneralMarginRBC={applyGeneralMarginRBC}
 				applyGeneralMarginCostList={applyGeneralMarginCostList}
