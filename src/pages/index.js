@@ -173,6 +173,25 @@ const IndexPage = () => {
 		setNewPricesCostList((prev) => ({ ...prev, [articleId]: newPrice }));
 	};
 
+	const handleNewPriceChangeCostList = (
+		newPrice,
+		{ articleId, netCost = 0 }
+	) => {
+		if (netCost <= 0) {
+			console.warn("Net cost is zero or negative. Cannot calculate margin.");
+			return;
+		}
+
+		const newMargin = ((newPrice / netCost - 1) * 100).toFixed(2);
+		console.log("NEWMARGIN", newMargin, "NEW PRICE", newPrice);
+
+		setNewPricesCostList((prev) => ({ ...prev, [articleId]: newPrice }));
+		setNewMarginsCostList((prev) => ({
+			...prev,
+			[articleId]: parseFloat(newMargin),
+		}));
+	};
+
 	const handleNewMarginChangeReseller = (
 		newMargin,
 		{ articleId, netCost = 0 }
@@ -246,6 +265,7 @@ const IndexPage = () => {
 				handleNewMarginChangeRBC={handleNewMarginChangeRBC}
 				handleNewMarginChangeCostList={handleNewMarginChangeCostList}
 				handleNewMarginChangeReseller={handleNewMarginChangeReseller}
+				handleNewPriceChangeCostList={handleNewPriceChangeCostList}
 				newMargins={newMargins}
 				newMarginsRBC={newMarginsRBC}
 				newMarginsCostList={newMarginsCostList}

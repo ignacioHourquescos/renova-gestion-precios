@@ -14,8 +14,13 @@ const PriceTable_Normal = ({
 	handleNewMarginChange,
 	listId,
 	showVariation,
+	modificationType,
+
+	handleNewPriceChangeCostList,
 }) => {
 	const [discount, setDiscount] = useState(0);
+	const isDisabled = modificationType === "COST_MODIFICATION";
+	const [fixedTarget, setFixedTarget] = useState(null);
 
 	const findPriceByListId = (prices, targetListId) => {
 		const dummyPriceRecord = {
@@ -42,6 +47,7 @@ const PriceTable_Normal = ({
 									onClick={(listId) => applyGeneralMargin(listId)}
 									value={generalMargin}
 									onChange={setGeneralMargin}
+									disabled={isDisabled}
 								/>
 							</div>
 						</>
@@ -69,6 +75,7 @@ const PriceTable_Normal = ({
 								precision={2}
 								step={0.01}
 								className="percentaje"
+								disabled={isDisabled}
 							/>
 						);
 					},
@@ -88,6 +95,7 @@ const PriceTable_Normal = ({
 											suffix="%"
 											precision={2}
 											step={0.01}
+											disabled={isDisabled}
 										/>
 									</div>
 								</>
@@ -99,20 +107,32 @@ const PriceTable_Normal = ({
 							render: (_, record) => {
 								//prettier-ignore
 								const priceInfo = findPriceByListId(record.prices, listId);
+								const initialPrice = priceInfo.price;
 								const newPrice =
 									record.netCost *
 									(1 +
 										(newMargins[record.articleId] || priceInfo.margin) / 100) *
 									(1 - discount / 100);
+								//console.log("NEWMARGINS", newMargins, "PRICEINFO", priceInfo);
 								return (
 									<div>
 										{/* <div>RP:{priceInfo.margin}</div> */}
 										{/* <div>NEW:{newMargins[record.articleId]}</div> */}
-										<div>
+
+										<InputNumber
+											type="number"
+											value={newPrice || initialPrice}
+											onChange={(value) =>
+												handleNewPriceChangeCostList(value, record)
+											}
+											style={{ width: "100%" }}
+											disabled={isDisabled}
+										/>
+										{/* <div>
 											{isNaN(newPrice)
 												? "NO existe"
 												: formatearNumero(newPrice, showWithIVA)}
-										</div>
+										</div> */}
 									</div>
 								);
 							},

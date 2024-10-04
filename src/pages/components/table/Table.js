@@ -7,6 +7,7 @@ import PriceTable_Normal from "./components/PriceTable_Normal";
 const CustomTable = ({
 	data,
 	modifiedNetCosts,
+	modificationType,
 	handleNetCostChange,
 	showWithIVA,
 	applyGeneralMargin,
@@ -29,6 +30,7 @@ const CustomTable = ({
 	newMarginsCostList,
 	setNewMarginsCostList,
 	handleNewMarginChangeCostList,
+	handleNewPriceChangeCostList,
 	newPricesCostList,
 	applyGeneralMarginReseller,
 	generalMarginReseller,
@@ -91,8 +93,6 @@ const CustomTable = ({
 											parseFloat(e.target.value)
 										)
 									}
-									type="number"
-									step="0.01"
 								/>
 							),
 						},
@@ -116,7 +116,10 @@ const CustomTable = ({
 			showWithIVA,
 			listId: 0,
 			showVariation,
+			modificationType,
+			handleNewPriceChangeCostList: handleNewPriceChangeCostList,
 		}),
+		/*
 		...PriceTable_Normal({
 			name: "LISTA 1",
 			applyGeneralMargin: applyGeneralMarginReseller,
@@ -129,6 +132,7 @@ const CustomTable = ({
 			showWithIVA,
 			listId: 1,
 			showVariation,
+			modificationType,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
@@ -142,6 +146,7 @@ const CustomTable = ({
 			showWithIVA,
 			listId: 2,
 			showVariation,
+			modificationType,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA RBC",
@@ -155,7 +160,9 @@ const CustomTable = ({
 			showWithIVA,
 			listId: 3,
 			showVariation,
+			modificationType,
 		}),
+		*/
 	];
 
 	return (

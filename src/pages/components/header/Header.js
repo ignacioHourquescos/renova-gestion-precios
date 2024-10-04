@@ -92,16 +92,25 @@ const Header = ({
 				<Option value="" disabled>
 					Agrupacion
 				</Option>
+				<Button
+					onClick={() => {
+						handleModalClose();
+						setModificationType("COST_MODIFICATION");
+					}}
+					blocktype="primary"
+				>
+					Modificar Costos
+				</Button>
 
 				<Button
 					type="primary"
 					onClick={() => {
 						handleModalClose();
-						setModificationType("manual");
+						setModificationType("PRICE_MODIFICATION");
 					}}
 					block
 				>
-					OK
+					Modificar Precios
 				</Button>
 			</Modal>
 		</>
