@@ -116,8 +116,6 @@ const CustomTable = ({
 			showWithIVA,
 			listId: 0,
 			showVariation,
-			modificationType,
-			handleNewPriceChangeCostList: handleNewPriceChangeCostList,
 		}),
 		/*
 		...PriceTable_Normal({
