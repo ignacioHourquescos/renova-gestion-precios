@@ -26,7 +26,7 @@ function agregarSeparadorMiles(numero) {
 
 export function variationFormatter(value) {
 	if (isNaN(value)) {
-		return <span style={{ color: "gray" }}>0</span>;
+		return <span style={{ color: "gray" }}>0--</span>;
 	}
 
 	if (((value - 1) * 100).toFixed(2) == 0.0 || isNaN(value)) {

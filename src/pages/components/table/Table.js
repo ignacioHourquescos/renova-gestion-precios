@@ -65,7 +65,7 @@ const CustomTable = ({
 					dataIndex: "articleId",
 					key: "articleId",
 					align: "left",
-					width: "10%",
+					width: "5%",
 				},
 				{
 					title: "DESCRIPCIÓN",
@@ -79,14 +79,15 @@ const CustomTable = ({
 					title: "COSTO NETO",
 					children: [
 						{
-							title: "Costo RP",
 							dataIndex: "netCost",
 							key: "netCost",
 							align: "right",
-							width: "5%",
+							width: "3%",
 							render: (text, record) => (
 								<Input
 									value={modifiedNetCosts[record.articleId] || record.netCost}
+									disabled={modificationType != "COST_MODIFICATION"}
+									prefix="$"
 									onChange={(e) =>
 										handleNetCostChange(
 											record.articleId,
@@ -104,48 +105,49 @@ const CustomTable = ({
 		// Columnas de COSTO
 
 		// Columnas de LISTA NORMAL
-		...PriceTable_Normal({
-			name: "LISTA 0",
-			applyGeneralMargin: applyGeneralMarginCostList,
-			generalMargin: generalMarginCostList,
-			setGeneralMargin: setGeneralMarginCostList,
-			newMargins: newMarginsCostList,
-			setNewMargins: setNewMarginsCostList,
-			handleNewMarginChange: handleNewMarginChangeCostList,
-			newPrices: newPricesCostList,
-			showWithIVA,
-			listId: 0,
-			showVariation,
-		}),
-		/*
-		...PriceTable_Normal({
-			name: "LISTA 1",
-			applyGeneralMargin: applyGeneralMarginReseller,
-			generalMargin: generalMarginReseller,
-			setGeneralMargin: setGeneralMarginReseller,
-			newMargins: newMarginsReseller,
-			setNewMargins: setNewMarginsReseller,
-			handleNewMarginChange: handleNewMarginChangeReseller,
-			newPrices: newPricesReseller,
-			showWithIVA,
-			listId: 1,
-			showVariation,
-			modificationType,
-		}),
-		...PriceTable_Normal({
-			name: "LISTA NORMAL",
-			applyGeneralMargin,
-			generalMargin,
-			setGeneralMargin,
-			newMargins,
-			setNewMargins,
-			handleNewMarginChange,
-			newPrices,
-			showWithIVA,
-			listId: 2,
-			showVariation,
-			modificationType,
-		}),
+		//...PriceTable_Normal({
+		//	name: "LISTA 0",
+		//	applyGeneralMargin: applyGeneralMarginCostList,
+		//	generalMargin: generalMarginCostList,
+		//	setGeneralMargin: setGeneralMarginCostList,
+		//	newMargins: newMarginsCostList,
+		//	setNewMargins: setNewMarginsCostList,
+		//	handleNewMarginChange: handleNewMarginChangeCostList,
+		//	newPrices: newPricesCostList,
+		//	showWithIVA,
+		//	listId: 0,
+		//	showVariation,
+		//	modificationType,
+		//}),
+		//
+		//...PriceTable_Normal({
+		//	name: "LISTA 1",
+		//	applyGeneralMargin: applyGeneralMarginReseller,
+		//	generalMargin: generalMarginReseller,
+		//	setGeneralMargin: setGeneralMarginReseller,
+		//	newMargins: newMarginsReseller,
+		//	setNewMargins: setNewMarginsReseller,
+		//	handleNewMarginChange: handleNewMarginChangeReseller,
+		//	newPrices: newPricesReseller,
+		//	showWithIVA,
+		//	listId: 1,
+		//	showVariation,
+		//	modificationType,
+		//}),
+		//...PriceTable_Normal({
+		//	name: "LISTA NORMAL",
+		//	applyGeneralMargin,
+		//	generalMargin,
+		//	setGeneralMargin,
+		//	newMargins,
+		//	setNewMargins,
+		//	handleNewMarginChange,
+		//	newPrices,
+		//	showWithIVA,
+		//	listId: 2,
+		//	showVariation,
+		//	modificationType,
+		//}),
 		...PriceTable_Normal({
 			name: "LISTA RBC",
 			applyGeneralMargin: applyGeneralMarginRBC,
@@ -160,7 +162,6 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 		}),
-		*/
 	];
 
 	return (

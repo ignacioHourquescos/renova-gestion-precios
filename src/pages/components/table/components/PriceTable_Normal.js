@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { InputNumber } from "antd";
+import { Button, InputNumber } from "antd";
 import { formatearNumero, variationFormatter } from "../../../../utils";
 import ThunderInput from "./componentes/ThunderInput";
+import { ThunderboltOutlined } from "@ant-design/icons";
 
 const PriceTable_Normal = ({
 	name,
@@ -38,7 +39,16 @@ const PriceTable_Normal = ({
 				{
 					title: (
 						<>
-							<div>GANANCIA</div>
+							<div>
+								{" "}
+								<Button
+									type="link"
+									icon={<ThunderboltOutlined />} // Fixed icon
+									onClick={(listId) => applyGeneralMargin(listId)}
+									disabled={isDisabled}
+								/>
+								GANANCIA
+							</div>
 							<div style={{ display: "flex" }}>
 								<ThunderInput
 									onClick={(listId) => applyGeneralMargin(listId)}
@@ -65,14 +75,25 @@ const PriceTable_Normal = ({
 						return (
 							<InputNumber
 								type="number"
-								value={newMargins[record.articleId] || initialMargin}
-								onChange={(value) => handleNewMarginChange(value, record)}
+								value={newMargins[record.articleId] ?? initialMargin}
+								onChange={(value) =>
+									handleNewMarginChange(value !== null ? value : 0, record)
+								}
 								style={{ width: "100%" }}
 								suffix="%"
 								precision={2}
 								step={0.01}
 								className="percentaje"
 								disabled={isDisabled}
+								formatter={(value) =>
+									value !== null && value !== undefined
+										? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+										: ""
+								}
+								parser={(value) => {
+									const parsed = value.replace(/\$\s?|(,*)/g, "");
+									return parsed === "" ? null : Number(parsed);
+								}}
 							/>
 						);
 					},
@@ -87,7 +108,7 @@ const PriceTable_Normal = ({
 										<InputNumber
 											type="number"
 											style={{ paddingLeft: 2, width: 100 }}
-											placeholder="Descuento %"
+											placeholder="Descuento"
 											onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
 											suffix="%"
 											precision={2}
@@ -104,20 +125,34 @@ const PriceTable_Normal = ({
 							render: (_, record) => {
 								//prettier-ignore
 								const priceInfo = findPriceByListId(record.prices, listId);
+								const variation =
+									(record.netCost *
+										(1 +
+											(newMargins[record.articleId] || priceInfo.margin) /
+												100)) /
+									priceInfo.netPrice;
 								const newPrice =
 									record.netCost *
 									(1 +
 										(newMargins[record.articleId] || priceInfo.margin) / 100) *
 									(1 - discount / 100);
 								return (
-									<div>
-										{/* <div>RP:{priceInfo.margin}</div> */}
-										{/* <div>NEW:{newMargins[record.articleId]}</div> */}
-										<div>
-											{isNaN(newPrice)
-												? "NO existe"
-												: formatearNumero(newPrice, showWithIVA)}
-										</div>
+									<div
+										style={{
+											backgroundColor: isDisabled ? "#f0f0f0" : "white",
+											padding: "0 !important",
+											margin: "0 !important",
+											height: "100%",
+											display: "flex",
+											alignItems: "center",
+											textAlign: "right",
+											justifyContent: "space-between",
+										}}
+									>
+										{getVariationTriangle(variation)}{" "}
+										{isNaN(newPrice)
+											? "NO existe"
+											: formatearNumero(newPrice, showWithIVA)}
 									</div>
 								);
 							},
@@ -162,3 +197,15 @@ const PriceTable_Normal = ({
 };
 
 export default PriceTable_Normal;
+
+const getVariationTriangle = (variation) => {
+	console.log("VARIATION", variation);
+	switch (true) {
+		case variation > 1.01:
+			return <span style={{ color: "green" }}>▲</span>;
+		case variation < 0.99:
+			return <span style={{ color: "red" }}>▼</span>;
+		default:
+			return null;
+	}
+};

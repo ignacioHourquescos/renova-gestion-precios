@@ -17,6 +17,7 @@ const Header = ({
 	setSearchText,
 	showVariation,
 	handleVariationSwitchChange,
+	modificationType,
 }) => {
 	return (
 		<>
@@ -60,9 +61,31 @@ const Header = ({
 					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
 				</div>
 
-				<Button type="primary" onClick={handleSave}>
-					Guardar
-				</Button>
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						marginTop: "16px",
+					}}
+				>
+					<Button
+						type="primary"
+						onClick={handleSave}
+						disabled={modificationType !== "COST_MODIFICATION"}
+						style={{ flex: 1, marginRight: "8px" }}
+					>
+						Guardar COSTOS Actualizados
+					</Button>
+
+					<Button
+						type="primary"
+						onClick={handleSave}
+						disabled={modificationType !== "PRICE_MODIFICATION"}
+						style={{ flex: 1, marginLeft: "8px" }}
+					>
+						Guardar PRECIOS Modificados
+					</Button>
+				</div>
 			</div>
 
 			<Modal
@@ -92,26 +115,35 @@ const Header = ({
 				<Option value="" disabled>
 					Agrupacion
 				</Option>
-				<Button
-					onClick={() => {
-						handleModalClose();
-						setModificationType("COST_MODIFICATION");
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						marginTop: "16px",
 					}}
-					blocktype="primary"
 				>
-					Modificar Costos
-				</Button>
+					<Button
+						onClick={() => {
+							handleModalClose();
+							setModificationType("COST_MODIFICATION");
+						}}
+						type="primary"
+						style={{ flex: 1, marginRight: "8px" }}
+					>
+						Modificar Costos
+					</Button>
 
-				<Button
-					type="primary"
-					onClick={() => {
-						handleModalClose();
-						setModificationType("PRICE_MODIFICATION");
-					}}
-					block
-				>
-					Modificar Precios
-				</Button>
+					<Button
+						type="primary"
+						onClick={() => {
+							handleModalClose();
+							setModificationType("PRICE_MODIFICATION");
+						}}
+						style={{ flex: 1, marginLeft: "8px" }}
+					>
+						Modificar Precios
+					</Button>
+				</div>
 			</Modal>
 		</>
 	);

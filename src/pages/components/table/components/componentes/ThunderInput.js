@@ -16,15 +16,8 @@ const ThunderInput = ({
 				justifyContent: "space-between",
 			}}
 		>
-			<Button
-				type="link"
-				icon={<ThunderboltOutlined />} // Fixed icon
-				onClick={onClick} // Use the passed onClick handler
-				disabled={disabled}
-			/>
 			<InputNumber
 				style={{
-					marginLeft: 8,
 					width: "100%",
 				}}
 				value={value} // Use the passed value

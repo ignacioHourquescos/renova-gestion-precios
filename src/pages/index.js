@@ -34,6 +34,7 @@ const IndexPage = () => {
 	const handleNetCostChange = (articleId, newNetCost) => {
 		setModifiedNetCosts((prev) => ({ ...prev, [articleId]: newNetCost }));
 	};
+
 	useEffect(() => {
 		console.log("ENTRO AL USE EFFECT");
 		setReload();
@@ -56,6 +57,45 @@ const IndexPage = () => {
 	}, [selectedGroup, reload]); // Dependencia de selectedGroup
 
 	const handleSave = async () => {
+		if (modificationType === "COST_MODIFICATION") {
+			const payload = {
+				articles: data.map((item) => ({
+					articleId: item.articleId,
+					grossCost: item.grossCost,
+					netCost: modifiedNetCosts[item.articleId] || item.netCost,
+				})),
+			};
+
+			try {
+				const response = await fetch(
+					`${process.env.REACT_APP_API_URL}/api/articles/updateCosts`,
+					{
+						method: "PUT",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(payload),
+					}
+				);
+				if (!response.ok) throw new Error(`Error al actualizar los costos`);
+				const result = await response.json();
+				notification.success({
+					message: `Costos actualizados`,
+					description: result.message,
+					duration: 2,
+					stack: false,
+				});
+				setReload((prev) => !prev);
+				return;
+			} catch (error) {
+				console.error(`Error al enviar los datos de costos:`, error);
+				notification.error({
+					message: `Error al actualizar los costos`,
+					description: error.message,
+					duration: 2,
+					stack: false,
+				});
+				return;
+			}
+		}
 		const createPayload = (data, newMargins, newPrices, priceIndex) => ({
 			articles: data.map((item) => ({
 				articleId: item.articleId,
@@ -108,10 +148,10 @@ const IndexPage = () => {
 			1
 		);
 
-		await updateList(2, payload, "Normal");
+		//await updateList(2, payload, "Normal");
 		await updateList(3, payloadRBC, "RBC");
-		await updateList(0, payloadCostList, "Cost List");
-		await updateList(1, payloadReseller, "Reseller");
+		//await updateList(0, payloadCostList, "Cost List");
+		//await updateList(1, payloadReseller, "Reseller");
 		setReload((prev) => !prev);
 	};
 

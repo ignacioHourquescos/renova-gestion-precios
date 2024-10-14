@@ -68,20 +68,20 @@ code {
 
 }
 
-.ant-input-number-input { 
+.ant-input-number, .ant-input{
   text-align: right !important;
   padding-right:1.5rem !important;
    border-radius: 0px !important;
    border:0 !important;
 }
 
-.ant-input-number{
+.ant-input-number, .ant-input{
   border-radius: 0px !important;
   padding:0 !important;
   border:0 !important;
 }
 
-.ant-input-number-affix-wrapper{
+.ant-input-number-affix-wrapper, .ant-input-affix-wrapper{
   border-radius: 0px !important;
   padding:0 !important;
   border:0 !important;
