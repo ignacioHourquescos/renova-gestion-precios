@@ -119,8 +119,19 @@ const IndexPage = () => {
 						body: JSON.stringify(payload),
 					}
 				);
-				if (!response.ok)
+				if (!response.ok) {
+					const errorData = await response.json();
+					const errorMessage = errorData.message || "Unknown error occurred";
+					notification.error({
+						message: "Error",
+						description: `${errorMessage}`,
+						placement: "topRight",
+						duration: 5,
+					});
+					console.warn(errorMessage);
 					throw new Error(`Error al guardar los datos de ${listName}`);
+				}
+
 				const result = await response.json();
 				notification.success({
 					message: `Lista ${listName} actualizada`,
@@ -129,6 +140,17 @@ const IndexPage = () => {
 					stack: false,
 				});
 			} catch (error) {
+				let errorMessage = "Error desconocido";
+
+				// Try to parse the error message if it's a JSON string
+				try {
+					const errorObj = JSON.parse(error.message);
+					errorMessage = errorObj.message || errorMessage;
+				} catch (e) {
+					// If parsing fails, use the error message as is
+					errorMessage = error.message || errorMessage;
+				}
+
 				console.error(`Error al enviar los datos de ${listName}:`, error);
 			}
 		};
@@ -149,9 +171,23 @@ const IndexPage = () => {
 		);
 
 		//await updateList(2, payload, "Normal");
-		await updateList(3, payloadRBC, "RBC");
+		//await updateList(3, payloadRBC, "RBC");
 		//await updateList(0, payloadCostList, "Cost List");
 		//await updateList(1, payloadReseller, "Reseller");
+
+		try {
+			//await updateList(2, payload, "Normal");
+			await updateList(3, payloadRBC, "RBC");
+			//await updateList(0, payloadCostList, "Cost List");
+			//await updateList(1, payloadReseller, "Reseller");
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+
+			// Reload the page after the 2-second delay
+			window.location.reload();
+		} catch (error) {
+			console.error("Error updating list:", error);
+			// Handle the error appropriately
+		}
 		setReload((prev) => !prev);
 	};
 
