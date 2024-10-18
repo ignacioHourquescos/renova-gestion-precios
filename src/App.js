@@ -5,15 +5,11 @@ import Index from "./pages";
 function App() {
 	return (
 		<Router>
-			<div className="App">
-				<header className="App-header">
-					<LayoutCustom>
-						<Routes>
-							<Route path="/" element={<Index />} />{" "}
-						</Routes>
-					</LayoutCustom>
-				</header>
-			</div>
+			<LayoutCustom>
+				<Routes>
+					<Route path="/" element={<Index />} />{" "}
+				</Routes>
+			</LayoutCustom>
 		</Router>
 	);
 }

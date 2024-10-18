@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Button, Select, Switch, Input } from "antd";
 import { groups } from "../utils/dummy_agrupation"; // Ajusta la ruta según la ubicación real
-import Title from "./styles";
+import { Title, Container } from "./styles";
 
 const { Option } = Select;
 
@@ -21,14 +21,9 @@ const Header = ({
 }) => {
 	return (
 		<>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "space-between",
-					marginBottom: 16,
-				}}
-			>
+			<Container>
 				<div>
+					{/* add datbase name here PROCESS:ENV. */}
 					<Input
 						placeholder="Buscar por Código"
 						style={{ width: 300 }}
@@ -65,7 +60,6 @@ const Header = ({
 					style={{
 						display: "flex",
 						justifyContent: "space-between",
-						marginTop: "16px",
 					}}
 				>
 					<Button
@@ -86,7 +80,7 @@ const Header = ({
 						Guardar PRECIOS Modificados
 					</Button>
 				</div>
-			</div>
+			</Container>
 
 			<Modal
 				title="MOdificacion de precios"

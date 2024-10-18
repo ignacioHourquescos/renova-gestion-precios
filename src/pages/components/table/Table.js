@@ -3,6 +3,7 @@ import { Input, Table } from "antd";
 import { formatearNumero } from "../../../utils";
 
 import PriceTable_Normal from "./components/PriceTable_Normal";
+import { TableContainer } from "./Table.styles";
 
 const CustomTable = ({
 	data,
@@ -165,14 +166,18 @@ const CustomTable = ({
 	];
 
 	return (
-		<Table
-			className="table-custom"
-			bordered
-			columns={columns}
-			dataSource={filteredData}
-			rowKey="articleId"
-			pagination={{ pageSize: 200 }}
-		/>
+		<TableContainer>
+			<Table
+				className="table-custom"
+				columns={columns}
+				dataSource={filteredData}
+				rowKey="articleId"
+				pagination={{ pageSize: 200 }}
+				pagination={false}
+				scroll={{ y: "75vh" }} // Enable vertical scrolling
+				sticky={true}
+			/>
+		</TableContainer>
 	);
 };
 

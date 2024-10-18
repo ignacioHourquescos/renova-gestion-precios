@@ -18,7 +18,7 @@ const LayoutCustom = ({ children }) => {
 		>
 			<Content
 				style={{
-					padding: "0 48px",
+					padding: "0px",
 				}}
 			>
 				<Breadcrumb
@@ -29,8 +29,8 @@ const LayoutCustom = ({ children }) => {
 				<div
 					style={{
 						background: colorBgContainer,
-						minHeight: 280,
-						padding: 24,
+						minHeight: 260,
+
 						borderRadius: borderRadiusLG,
 					}}
 				>
