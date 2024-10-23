@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Button, Select, Switch, Input } from "antd";
 import { groups } from "../utils/dummy_agrupation"; // Ajusta la ruta según la ubicación real
+import { groups_prod } from "../utils/dummy_agrupation";
 import { Title, Container } from "./styles";
 
 const { Option } = Select;
@@ -19,6 +20,9 @@ const Header = ({
 	handleVariationSwitchChange,
 	modificationType,
 }) => {
+	const groupsToUse =
+		process.env.NODE_ENV === "development" ? groups : groups_prod;
+	console.log("PROCCESS:ENV", process.env);
 	return (
 		<>
 			<Container>
@@ -37,7 +41,7 @@ const Header = ({
 						onChange={handleGroupChange}
 						placeholder="Seleccion agrupación"
 					>
-						{groups.map((group) => (
+						{groupsToUse.map((group) => (
 							<Option key={group.code} value={group.code}>
 								{group.description}
 							</Option>
@@ -100,7 +104,7 @@ const Header = ({
 						option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 					}
 				>
-					{groups.map((group) => (
+					{groupsToUse.map((group) => (
 						<Option key={group.code} value={group.code}>
 							{group.description}
 						</Option>

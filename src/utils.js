@@ -11,11 +11,17 @@ export function formatearNumero(num, showWithIVA) {
 	return (
 		<>
 			{showWithIVA ? (
-				<span style={{ fontWeight: "bold" }}>
-					${agregarSeparadorMiles((num * 1.21).toFixed(0))}
-				</span>
+				<div style={{ fontWeight: "bold", width: "100%" }}>
+					{agregarSeparadorMiles((num * 1.21).toFixed(0))}
+				</div>
 			) : (
-				<span>${agregarSeparadorMiles(num.toFixed(0))}</span>
+				<div
+					style={{
+						width: "100%",
+					}}
+				>
+					{agregarSeparadorMiles(num.toFixed(0))}
+				</div>
 			)}
 		</>
 	);

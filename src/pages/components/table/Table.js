@@ -88,7 +88,6 @@ const CustomTable = ({
 								<Input
 									value={modifiedNetCosts[record.articleId] || record.netCost}
 									disabled={modificationType != "COST_MODIFICATION"}
-									prefix="$"
 									onChange={(e) =>
 										handleNetCostChange(
 											record.articleId,
@@ -149,6 +148,7 @@ const CustomTable = ({
 		//	showVariation,
 		//	modificationType,
 		//}),
+
 		...PriceTable_Normal({
 			name: "LISTA RBC",
 			applyGeneralMargin: applyGeneralMarginRBC,
@@ -172,7 +172,6 @@ const CustomTable = ({
 				columns={columns}
 				dataSource={filteredData}
 				rowKey="articleId"
-				pagination={{ pageSize: 200 }}
 				pagination={false}
 				scroll={{ y: "75vh" }} // Enable vertical scrolling
 				sticky={true}

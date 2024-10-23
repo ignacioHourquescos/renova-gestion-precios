@@ -51,3 +51,27 @@ export const groups = [
 	{ code: 19, description: "zz" },
 	{ code: 171, description: "zz" },
 ];
+
+export const groups_prod = [
+	{ code: 48, description: "EAM" },
+	{ code: 1, description: "FRAM" },
+	{ code: 29, description: "KARBON" },
+	{ code: 14, description: "LOCX" },
+	{ code: 15, description: "MAHLE" },
+	{ code: 9, description: "MANN" },
+	{ code: 12, description: "MOTUL" },
+	{ code: 32, description: "ORIGINALES" },
+	{ code: 316, description: "PETRONAS" },
+	{ code: 27, description: "PUMA" },
+	{ code: 8, description: "RAMA" },
+	{ code: 22, description: "SAKURA" },
+	{ code: 10, description: "TECNECO" },
+	{ code: 5, description: "TOTAL" },
+	{ code: 3, description: "VALVOLINE" },
+	{ code: 45, description: "VARIOS" },
+	{ code: 4, description: "VARIOS (FILTROS)" },
+	{ code: 19, description: "VARIOS (LUBRICANTES)" },
+	{ code: 33, description: "VINTO" },
+	{ code: 11, description: "WAGNER LOCKHEED" },
+	{ code: 26, description: "WEGA" },
+];

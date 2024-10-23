@@ -26,10 +26,10 @@ code {
 }
 
 .ant-table-tbody{
-  padding: 0.2rem !important;
+  padding: 0 !important;
 }
 .ant-table-tbody > tr > td{
-  padding: 0.1rem 0.2rem !important;
+  margin: 0 !important;
 }
 /* Combinando las reglas duplicadas para .ant-table-tbody > tr > th */
 .ant-table-tbody > tr > th {
@@ -73,6 +73,12 @@ code {
   padding-right:1.5rem !important;
    border-radius: 0px !important;
    border:0 !important;
+   padding-right:1.5rem !important;
+}
+
+.ant-input-number-input, .ant-input{
+  text-align: right !important;
+  padding-right:1.5rem !important;
 }
 
 .ant-input-number{
@@ -101,8 +107,81 @@ code {
 
 .ant-select-selector {border-color: gray !important;}
 .ant-input {border-color: gray !important;}
-
+  
 .ant-breadcrumb{
   margin: 0px !important;
   padding:0px !important;
 }
+
+
+.ant-input-disabled{
+  padding: 0 !important;
+  background-color: rgb(249, 249, 249) !important;
+}
+
+/* Update these existing rules */
+.ant-table-tbody > tr > td {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ant-table-cell {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Add these new rules */
+.ant-table-cell .ant-input,
+.ant-table-cell .ant-input-number,
+.ant-table-cell .ant-input-number-input {
+  
+  margin: 0 !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+.ant-table-cell .ant-input-number-handler-wrap {
+  display: none;
+}
+
+/* Adjust the input padding for the dollar sign */
+.ant-input-affix-wrapper {
+  padding: 0 !important;
+}
+
+.ant-input-affix-wrapper .ant-input {
+  padding-left: 12px !important; /* Adjust this value as needed */
+}
+
+/* Remove any border that might be causing spacing */
+.ant-table-cell,
+.ant-table-cell .ant-input,
+.ant-table-cell .ant-input-number {
+  border: none !important;
+}
+
+/* Remove or comment out any existing rules that set alternating row colors */
+/* .ant-table-tbody > tr:nth-child(even) {
+  background-color: #f9f9f9;
+} */
+
+/* Set a consistent background color for all rows */
+.ant-table-tbody > tr {
+  background-color: white !important;
+}
+
+/* Set a consistent background for the COSTO NETO column */
+.ant-table-tbody > tr > td:nth-child(3) {
+  background-color: #f9f9f9 !important;
+}
+
+/* Ensure the input in the COSTO NETO column has the same background */
+.ant-table-tbody > tr > td:nth-child(3) .ant-input-number {
+  background-color: #f9f9f9 !important;
+}
+
+/* Right-align the text in the COSTO NETO column */
+.ant-table-tbody > tr > td:nth-child(3) .ant-input-number-input {
+  text-align: right !important;
+}
+

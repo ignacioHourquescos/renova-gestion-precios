@@ -79,8 +79,7 @@ const PriceTable_Normal = ({
 								onChange={(value) =>
 									handleNewMarginChange(value !== null ? value : 0, record)
 								}
-								style={{ width: "100%" }}
-								suffix="%"
+								style={{ width: "100%", textAlign: "right !important" }}
 								precision={2}
 								step={0.01}
 								className="percentaje"
@@ -107,13 +106,12 @@ const PriceTable_Normal = ({
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<InputNumber
 											type="number"
-											style={{ paddingLeft: 2, width: 100 }}
+											style={{ width: 100 }}
 											placeholder="Descuento"
 											onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
-											suffix="%"
 											precision={2}
-											step={0.01}
 											disabled={isDisabled}
+											step={0.01}
 										/>
 									</div>
 								</>
@@ -145,7 +143,7 @@ const PriceTable_Normal = ({
 											height: "100%",
 											display: "flex",
 											alignItems: "center",
-											textAlign: "right",
+
 											justifyContent: "space-between",
 										}}
 									>
