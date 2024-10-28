@@ -111,10 +111,12 @@ const IndexPage = () => {
 					"item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100) =>",
 					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100)
 				);
+				console.log("item=>", item?.prices[priceIndex]);
 				console.log(
 					"item?.prices[priceIndex]?.margin =>",
 					item?.prices[priceIndex]?.margin
 				);
+				console.log("item?.prices[priceIndex]=>", item?.prices[priceIndex]);
 				console.log("------------------------");
 
 				return {
