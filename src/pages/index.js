@@ -36,7 +36,6 @@ const IndexPage = () => {
 	};
 
 	useEffect(() => {
-		console.log("ENTRO AL USE EFFECT");
 		setReload();
 		const fetchData = async () => {
 			if (selectedGroup) {
@@ -97,16 +96,34 @@ const IndexPage = () => {
 			}
 		}
 		const createPayload = (data, newMargins, newPrices, priceIndex) => ({
-			articles: data.map((item) => ({
-				articleId: item.articleId,
-				description: item.description,
-				netCost: modifiedNetCosts[item.articleId] || item.netCost,
-				grossCost: item.netCost,
-				margin: newMargins[item.articleId] || 0,
-				netPrice:
-					newPrices[item.articleId] ||
-					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100),
-			})),
+			articles: data.map((item) => {
+				console.log("Article ID:", item.articleId);
+				console.log("Description:", item.description);
+				console.log(
+					"Net Cost:",
+					modifiedNetCosts[item.articleId] || item.netCost
+				);
+				console.log("Gross Cost:", item.netCost);
+				console.log("Margin:", newMargins[item.articleId] || 0);
+				console.log("newPrices[item.articleId]: =>", newPrices[item.articleId]);
+				console.log(
+					"item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100) =>",
+
+					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100)
+				);
+				console.log("------------------------");
+
+				return {
+					articleId: item.articleId,
+					description: item.description,
+					netCost: modifiedNetCosts[item.articleId] || item.netCost,
+					grossCost: item.netCost,
+					margin: newMargins[item.articleId] || 0,
+					netPrice:
+						newPrices[item.articleId] ||
+						item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100),
+				};
+			}),
 		});
 
 		const updateList = async (listId, payload, listName) => {

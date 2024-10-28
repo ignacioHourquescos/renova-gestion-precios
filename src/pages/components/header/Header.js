@@ -22,7 +22,7 @@ const Header = ({
 }) => {
 	const groupsToUse =
 		process.env.NODE_ENV === "development" ? groups : groups_prod;
-	console.log("PROCCESS:ENV", process.env);
+
 	return (
 		<>
 			<Container>

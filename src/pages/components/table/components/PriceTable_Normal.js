@@ -197,7 +197,6 @@ const PriceTable_Normal = ({
 export default PriceTable_Normal;
 
 const getVariationTriangle = (variation) => {
-	console.log("VARIATION", variation);
 	switch (true) {
 		case variation > 1.01:
 			return <span style={{ color: "green" }}>▲</span>;
