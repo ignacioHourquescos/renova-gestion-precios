@@ -183,7 +183,7 @@ const IndexPage = () => {
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 
 			// Reload the page after the 2-second delay
-			window.location.reload();
+			//window.location.reload();
 		} catch (error) {
 			console.error("Error updating list:", error);
 			// Handle the error appropriately
