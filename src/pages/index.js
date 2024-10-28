@@ -97,6 +97,7 @@ const IndexPage = () => {
 		}
 		const createPayload = (data, newMargins, newPrices, priceIndex) => ({
 			articles: data.map((item) => {
+				console.log("LISTA=>", priceIndex);
 				console.log("Article ID:", item.articleId);
 				console.log("Description:", item.description);
 				console.log(
@@ -108,8 +109,11 @@ const IndexPage = () => {
 				console.log("newPrices[item.articleId]: =>", newPrices[item.articleId]);
 				console.log(
 					"item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100) =>",
-
 					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100)
+				);
+				console.log(
+					"item?.prices[priceIndex]?.margin =>",
+					item?.prices[priceIndex]?.margin
 				);
 				console.log("------------------------");
 
