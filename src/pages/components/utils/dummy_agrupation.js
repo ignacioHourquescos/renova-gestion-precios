@@ -53,6 +53,7 @@ export const groups = [
 ];
 
 export const groups_prod = [
+	{ code: 28, description: "AGRUPACION PRUEBA" },
 	{ code: 48, description: "EAM" },
 	{ code: 1, description: "FRAM" },
 	{ code: 29, description: "KARBON" },
