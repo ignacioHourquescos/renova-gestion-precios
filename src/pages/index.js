@@ -97,28 +97,6 @@ const IndexPage = () => {
 		}
 		const createPayload = (data, newMargins, newPrices, priceIndex) => ({
 			articles: data.map((item) => {
-				console.log("LISTA=>", priceIndex);
-				console.log("Article ID:", item.articleId);
-				console.log("Description:", item.description);
-				console.log(
-					"Net Cost:",
-					modifiedNetCosts[item.articleId] || item.netCost
-				);
-				console.log("Gross Cost:", item.netCost);
-				console.log("Margin:", newMargins[item.articleId] || 0);
-				console.log("newPrices[item.articleId]: =>", newPrices[item.articleId]);
-				console.log(
-					"item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100) =>",
-					item.netCost * (1 + (item?.prices[priceIndex]?.margin || 0) / 100)
-				);
-				console.log("item=>", item?.prices[priceIndex]);
-				console.log(
-					"item?.prices[priceIndex]?.margin =>",
-					item?.prices[priceIndex]?.margin
-				);
-				console.log("item?.prices[priceIndex]=>", item?.prices[priceIndex]);
-				console.log("------------------------");
-
 				return {
 					articleId: item.articleId,
 					description: item.description,
@@ -330,10 +308,13 @@ const IndexPage = () => {
 	return (
 		<>
 			<Header // Usar el nuevo componente Header
-				isModalVisible={isModalVisible}
+				isModalVisible={false}
+				//isModalVisible={isModalVisible}
 				handleModalClose={handleModalClose}
-				setModificationType={setModificationType}
-				selectedGroup={selectedGroup}
+				//setModificationType={setModificationType}
+				setModificationType="PRICE_MODIFICATION"
+				selectedGroup="LOCX"
+				//selectedGroup={selectedGroup}
 				handleGroupChange={handleGroupChange}
 				showWithIVA={showWithIVA}
 				handleSwitchChange={handleSwitchChange}
@@ -343,7 +324,6 @@ const IndexPage = () => {
 				showVariation={showVariation}
 				handleVariationSwitchChange={handleVariationSwitchChange}
 			/>
-
 			<CustomTable
 				showVariation={showVariation}
 				loading={loading}

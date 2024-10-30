@@ -104,36 +104,34 @@ const CustomTable = ({
 
 		// Columnas de COSTO
 
-		// Columnas de LISTA NORMAL
-		//...PriceTable_Normal({
-		//	name: "LISTA 0",
-		//	applyGeneralMargin: applyGeneralMarginCostList,
-		//	generalMargin: generalMarginCostList,
-		//	setGeneralMargin: setGeneralMarginCostList,
-		//	newMargins: newMarginsCostList,
-		//	setNewMargins: setNewMarginsCostList,
-		//	handleNewMarginChange: handleNewMarginChangeCostList,
-		//	newPrices: newPricesCostList,
-		//	showWithIVA,
-		//	listId: 0,
-		//	showVariation,
-		//	modificationType,
-		//}),
-		//
-		//...PriceTable_Normal({
-		//	name: "LISTA 1",
-		//	applyGeneralMargin: applyGeneralMarginReseller,
-		//	generalMargin: generalMarginReseller,
-		//	setGeneralMargin: setGeneralMarginReseller,
-		//	newMargins: newMarginsReseller,
-		//	setNewMargins: setNewMarginsReseller,
-		//	handleNewMarginChange: handleNewMarginChangeReseller,
-		//	newPrices: newPricesReseller,
-		//	showWithIVA,
-		//	listId: 1,
-		//	showVariation,
-		//	modificationType,
-		//}),
+		...PriceTable_Normal({
+			name: "LISTA 0",
+			applyGeneralMargin: applyGeneralMarginCostList,
+			generalMargin: generalMarginCostList,
+			setGeneralMargin: setGeneralMarginCostList,
+			newMargins: newMarginsCostList,
+			setNewMargins: setNewMarginsCostList,
+			handleNewMarginChange: handleNewMarginChangeCostList,
+			newPrices: newPricesCostList,
+			showWithIVA,
+			listId: 0,
+			showVariation,
+			modificationType,
+		}),
+		...PriceTable_Normal({
+			name: "LISTA 1",
+			applyGeneralMargin: applyGeneralMarginReseller,
+			generalMargin: generalMarginReseller,
+			setGeneralMargin: setGeneralMarginReseller,
+			newMargins: newMarginsReseller,
+			setNewMargins: setNewMarginsReseller,
+			handleNewMarginChange: handleNewMarginChangeReseller,
+			newPrices: newPricesReseller,
+			showWithIVA,
+			listId: 1,
+			showVariation,
+			modificationType,
+		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
 			applyGeneralMargin,
@@ -150,7 +148,7 @@ const CustomTable = ({
 		}),
 
 		...PriceTable_Normal({
-			name: "LISTA RBC",
+			name: "RBC",
 			applyGeneralMargin: applyGeneralMarginRBC,
 			generalMargin: generalMarginRBC,
 			setGeneralMargin: setGeneralMarginRBC,

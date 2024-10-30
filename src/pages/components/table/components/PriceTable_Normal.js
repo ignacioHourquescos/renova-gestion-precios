@@ -39,24 +39,32 @@ const PriceTable_Normal = ({
 				{
 					title: (
 						<>
-							<div>
+							<div style={{ position: "relative" }}>
 								{" "}
-								<Button
-									type="link"
-									icon={<ThunderboltOutlined />} // Fixed icon
-									onClick={(listId) => applyGeneralMargin(listId)}
-									disabled={isDisabled}
-								/>
+								<div
+									style={{
+										position: "absolute",
+										top: "5px",
+										left: "5px",
+										zIndex: "100",
+									}}
+								>
+									{" "}
+									<Button
+										type="primary"
+										icon={<ThunderboltOutlined />} // Fixed icon
+										onClick={(listId) => applyGeneralMargin(listId)}
+										disabled={isDisabled}
+									/>
+								</div>
 								GANANCIA
 							</div>
-							<div style={{ display: "flex" }}>
-								<ThunderInput
-									onClick={(listId) => applyGeneralMargin(listId)}
-									value={generalMargin}
-									onChange={setGeneralMargin}
-									disabled={isDisabled}
-								/>
-							</div>
+							<ThunderInput
+								onClick={(listId) => applyGeneralMargin(listId)}
+								value={generalMargin}
+								onChange={setGeneralMargin}
+								disabled={isDisabled}
+							/>
 						</>
 					),
 					dataIndex: "newMargin",
@@ -101,9 +109,36 @@ const PriceTable_Normal = ({
 					? {
 							title: (
 								<>
-									{" "}
-									<div>PRECIO</div>
-									<div style={{ display: "flex", alignItems: "center" }}>
+									<div>
+										<div style={{ position: "relative" }}>
+											{" "}
+											<div
+												style={{
+													position: "absolute",
+													top: "5px",
+													left: "5px",
+													zIndex: "100",
+												}}
+											>
+												<Button
+													type="primary"
+													style={{
+														background: "transparent",
+														boxShadow: "0px !important",
+													}}
+													icon={
+														<ThunderboltOutlined
+															style={{
+																background: "transparent",
+																color: "transparent",
+															}}
+														/>
+													} // Fixed icon
+													disabled={isDisabled}
+												/>
+											</div>
+											PRECIO
+										</div>
 										<InputNumber
 											type="number"
 											style={{ width: 100 }}

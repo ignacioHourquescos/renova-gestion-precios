@@ -35,6 +35,7 @@ code {
 .ant-table-tbody > tr > th {
   padding: 0.1rem 0.2rem !important; /* Padding */
   border-radius: 0 !important; /* Border radius */
+
 }
 
 
@@ -47,26 +48,49 @@ code {
 } 
 */
 
-.ant-table-tbody > tr >td:nth-child(3),.ant-table-tbody > tr >td:nth-child(5),.ant-table-tbody > tr >td:nth-child(7),.ant-table-tbody > tr >td:nth-child(9),.ant-table-tbody > tr >td:nth-child(11){
-  border-right: 2px solid black !important;
+/* Table borders */
+.ant-table-tbody > tr > td:nth-child(3),
+.ant-table-tbody > tr > td:nth-child(5),
+.ant-table-tbody > tr > td:nth-child(7),
+.ant-table-tbody > tr > td:nth-child(9),
+.ant-table-tbody > tr > td:nth-child(11) {
+  border-right: 3px solid black !important;
 }
 
-.ant-table-thead > tr> th{
-  background-color: rgb(239, 239, 239) !important;
+
+.ant-table-tbody > tr > td:nth-child(4),
+.ant-table-tbody > tr > td:nth-child(6),
+.ant-table-tbody > tr > td:nth-child(8),
+.ant-table-tbody > tr > td:nth-child(10){
+  border-right: 1px solid gray !important;
 }
+
+
+
 .ant-table-thead > tr:first-child > th:first-child, .ant-table-thead > tr:first-child  > th:nth-child(2),.ant-table-thead > tr:first-child  > th:nth-child(3),.ant-table-thead > tr:first-child  > th:nth-child(4),.ant-table-thead > tr:first-child  > th:nth-child(5)  {
   padding: 0.2rem !important;
   background-color: rgb(231, 96, 51) !important;
   color: white !important;
+
 }
 
 
-.ant-table-thead > tr> th {
+/* Header styles */
+.ant-table-thead > tr > th {
   padding: 0 !important;
-  border-right: 2px solid black !important;
+  border-right: 3px solid rgb(0, 0, 0) !important;
   border-radius: 0px !important;
-
+  border-bottom: 2px solid rgb(231, 96, 51) !important;
+  background-color: rgb(239, 239, 239) !important;
 }
+/* Header cells - remove border */
+.ant-table-thead > tr > th:nth-child(4),
+.ant-table-thead > tr > th:nth-child(6),
+.ant-table-thead > tr > th:nth-child(8),
+.ant-table-thead > tr > th:nth-child(10) {
+  border-right: 1px solid gray !important;
+}
+
 
 .ant-input-number{
   text-align: right !important;
@@ -76,6 +100,16 @@ code {
    padding-right:1.5rem !important;
 }
 
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgb(206, 206, 206) !important;
+}
+
+ /*saca el doble bottom line de la columna costo NETO */
+.ant-table-thead > tr > th:nth-child(3) {
+  border-bottom: 0px  !important;  /* matches your existing header border color */
+}
+
+ /*Le ponde bottom line a todas las filas */
 .ant-input-number-input, .ant-input{
   text-align: right !important;
   padding-right:1.5rem !important;
@@ -134,10 +168,12 @@ code {
 .ant-table-cell .ant-input,
 .ant-table-cell .ant-input-number,
 .ant-table-cell .ant-input-number-input {
-  
+  padding-left: 0rem !important;
+
   margin: 0 !important;
   height: 100% !important;
   min-height: 100% !important;
+  width:100% !important;
 }
 
 .ant-table-cell .ant-input-number-handler-wrap {
@@ -160,10 +196,7 @@ code {
   border: none !important;
 }
 
-/* Remove or comment out any existing rules that set alternating row colors */
-/* .ant-table-tbody > tr:nth-child(even) {
-  background-color: #f9f9f9;
-} */
+
 
 /* Set a consistent background color for all rows */
 .ant-table-tbody > tr {
