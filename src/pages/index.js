@@ -308,13 +308,13 @@ const IndexPage = () => {
 	return (
 		<>
 			<Header // Usar el nuevo componente Header
-				isModalVisible={false}
-				//isModalVisible={isModalVisible}
+				//isModalVisible={false}
+				isModalVisible={isModalVisible}
 				handleModalClose={handleModalClose}
-				//setModificationType={setModificationType}
-				setModificationType="PRICE_MODIFICATION"
-				selectedGroup="LOCX"
-				//selectedGroup={selectedGroup}
+				setModificationType={setModificationType}
+				//setModificationType="PRICE_MODIFICATION"
+				//selectedGroup="LOCX"
+				selectedGroup={selectedGroup}
 				handleGroupChange={handleGroupChange}
 				showWithIVA={showWithIVA}
 				handleSwitchChange={handleSwitchChange}
