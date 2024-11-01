@@ -1,9 +1,18 @@
 import React from "react";
-import { Input, Table } from "antd";
+import { Input, InputNumber, Table } from "antd";
 import { formatearNumero } from "../../../utils";
+import "./Spinner.css";
 
 import PriceTable_Normal from "./components/PriceTable_Normal";
 import { TableContainer } from "./Table.styles";
+
+const CustomSpinner = () => (
+	<div class="spinner">
+		<div class="bounce1"></div>
+		<div class="bounce2"></div>
+		<div class="bounce3"></div>
+	</div>
+);
 
 const CustomTable = ({
 	data,
@@ -42,6 +51,7 @@ const CustomTable = ({
 	newPricesReseller,
 	searchText,
 	showVariation,
+	loading,
 }) => {
 	const filteredData = data.filter((item) =>
 		searchText.length >= 3
@@ -85,16 +95,29 @@ const CustomTable = ({
 							align: "right",
 							width: "3%",
 							render: (text, record) => (
-								<Input
-									value={modifiedNetCosts[record.articleId] || record.netCost}
-									disabled={modificationType != "COST_MODIFICATION"}
-									onChange={(e) =>
-										handleNetCostChange(
-											record.articleId,
-											parseFloat(e.target.value)
-										)
-									}
-								/>
+								<>
+									{}
+									<InputNumber
+										value={modifiedNetCosts[record.articleId] || record.netCost}
+										disabled={modificationType != "COST_MODIFICATION"}
+										onChange={(e) =>
+											handleNetCostChange(
+												record.articleId,
+												parseFloat(e.target.value)
+											)
+										}
+										style={{ fontWeight: "bold" }}
+										formatter={(value) =>
+											value !== null && value !== undefined
+												? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+												: ""
+										}
+										parser={(value) => {
+											const parsed = value.replace(/\$\s?|(,*)/g, "");
+											return parsed === "" ? null : Number(parsed);
+										}}
+									/>
+								</>
 							),
 						},
 					],
@@ -163,6 +186,11 @@ const CustomTable = ({
 		}),
 	];
 
+	const tableLoading = {
+		spinning: loading,
+		indicator: <CustomSpinner />,
+	};
+
 	return (
 		<TableContainer>
 			<Table
@@ -170,9 +198,14 @@ const CustomTable = ({
 				columns={columns}
 				dataSource={filteredData}
 				rowKey="articleId"
-				pagination={false}
 				scroll={{ y: "75vh" }} // Enable vertical scrolling
 				sticky={true}
+				pagination={{
+					defaultPageSize: 100,
+					position: ["bottomCenter"],
+					size: "small",
+				}}
+				loading={tableLoading}
 			/>
 		</TableContainer>
 	);

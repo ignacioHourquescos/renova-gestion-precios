@@ -82,12 +82,12 @@ const PriceTable_Normal = ({
 						}
 						return (
 							<InputNumber
+								suffix="%"
 								type="number"
 								value={newMargins[record.articleId] ?? initialMargin}
 								onChange={(value) =>
 									handleNewMarginChange(value !== null ? value : 0, record)
 								}
-								style={{ width: "100%", textAlign: "right !important" }}
 								precision={2}
 								step={0.01}
 								className="percentaje"
@@ -108,48 +108,46 @@ const PriceTable_Normal = ({
 				!showVariation
 					? {
 							title: (
-								<>
-									<div>
-										<div style={{ position: "relative" }}>
-											{" "}
-											<div
+								<div>
+									<div style={{ position: "relative" }}>
+										{" "}
+										<div
+											style={{
+												position: "absolute",
+												top: "5px",
+												left: "5px",
+												zIndex: "100",
+											}}
+										>
+											<Button
+												type="primary"
 												style={{
-													position: "absolute",
-													top: "5px",
-													left: "5px",
-													zIndex: "100",
+													background: "transparent",
+													boxShadow: "0px !important",
 												}}
-											>
-												<Button
-													type="primary"
-													style={{
-														background: "transparent",
-														boxShadow: "0px !important",
-													}}
-													icon={
-														<ThunderboltOutlined
-															style={{
-																background: "transparent",
-																color: "transparent",
-															}}
-														/>
-													} // Fixed icon
-													disabled={isDisabled}
-												/>
-											</div>
-											PRECIO
+												icon={
+													<ThunderboltOutlined
+														style={{
+															background: "transparent",
+															color: "transparent",
+														}}
+													/>
+												} // Fixed icon
+												disabled={isDisabled}
+											/>
 										</div>
-										<InputNumber
-											type="number"
-											style={{ width: 100 }}
-											placeholder="Descuento"
-											onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
-											precision={2}
-											disabled={isDisabled}
-											step={0.01}
-										/>
+										PRECIO
 									</div>
-								</>
+									<InputNumber
+										type="number"
+										style={{ width: 100 }}
+										placeholder="Descuento"
+										onChange={(value) => setDiscount(value || 0)} // Asumiendo que tienes un estado para el descuento
+										precision={2}
+										disabled={isDisabled}
+										step={0.01}
+									/>
+								</div>
 							),
 							dataIndex: "newPrice",
 							key: "newPrice",
@@ -178,6 +176,7 @@ const PriceTable_Normal = ({
 											height: "100%",
 											display: "flex",
 											alignItems: "center",
+											paddingRight: "17px",
 
 											justifyContent: "space-between",
 										}}
@@ -209,16 +208,6 @@ const PriceTable_Normal = ({
 
 								return (
 									<div>
-										<div>
-											{/* <div>RP:{priceInfo.netPrice}</div> */}
-											{/* <div>
-    NEW:
-    {record.netCost *
-        (1 +
-            (newMargins[record.articleId] || priceInfo.margin) /
-                100)}
-</div> */}
-										</div>
 										<div>{variationFormatter(value)}</div>
 									</div>
 								);

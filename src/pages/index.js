@@ -13,6 +13,7 @@ const IndexPage = () => {
 	const [isModalVisible, setIsModalVisible] = useState(true); // Estado para manejar la visibilidad del modal
 	const [modificationType, setModificationType] = useState();
 	const [reload, setReload] = useState(false);
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	const [newMargins, setNewMargins] = useState({}); // Estado para almacenar newMargins
 	const [newPrices, setNewPrices] = useState({}); // Estado para almacenar newPrices
@@ -36,10 +37,10 @@ const IndexPage = () => {
 	};
 
 	useEffect(() => {
-		setReload();
+		setLoading(true);
+		setData([]);
 		const fetchData = async () => {
 			if (selectedGroup) {
-				// Verifica si hay una agrupación seleccionada
 				try {
 					const response = await fetch(
 						`${process.env.REACT_APP_API_URL}/api/articles/articles?agrupation=${selectedGroup}`
@@ -49,6 +50,8 @@ const IndexPage = () => {
 					setData(result);
 				} catch (error) {
 					console.error("Error fetching data:", error);
+				} finally {
+					setLoading(false);
 				}
 			}
 		};
@@ -112,6 +115,7 @@ const IndexPage = () => {
 
 		const updateList = async (listId, payload, listName) => {
 			try {
+				setIsUpdating(true); // Start loading
 				const response = await fetch(
 					`${process.env.REACT_APP_API_URL}/api/articles/updateList?list_id=${listId}`,
 					{
@@ -137,22 +141,20 @@ const IndexPage = () => {
 				notification.success({
 					message: `Lista ${listName} actualizada`,
 					description: result.message,
-					duration: 2, // Duration in seconds
+					duration: 2,
 					stack: false,
 				});
 			} catch (error) {
 				let errorMessage = "Error desconocido";
-
-				// Try to parse the error message if it's a JSON string
 				try {
 					const errorObj = JSON.parse(error.message);
 					errorMessage = errorObj.message || errorMessage;
 				} catch (e) {
-					// If parsing fails, use the error message as is
 					errorMessage = error.message || errorMessage;
 				}
-
 				console.error(`Error al enviar los datos de ${listName}:`, error);
+			} finally {
+				setIsUpdating(false); // Stop loading regardless of success/failure
 			}
 		};
 
@@ -312,6 +314,7 @@ const IndexPage = () => {
 				isModalVisible={isModalVisible}
 				handleModalClose={handleModalClose}
 				setModificationType={setModificationType}
+				isUpdating={isUpdating}
 				//setModificationType="PRICE_MODIFICATION"
 				//selectedGroup="LOCX"
 				selectedGroup={selectedGroup}
