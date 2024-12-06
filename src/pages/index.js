@@ -160,12 +160,12 @@ const IndexPage = () => {
 
 		//const payload = createPayload(data, newMargins, newPrices, 2);
 		const payloadRBC = createPayload(data, newMarginsRBC, newPricesRBC, 3);
-		//const payloadCostList = createPayload(
-		//	data,
-		//	newMarginsCostList,
-		//	newPricesCostList,
-		//	0
-		//);
+		const payloadCostList = createPayload(
+			data,
+			newMarginsCostList,
+			newPricesCostList,
+			0
+		);
 		const payloadReseller = createPayload(
 			data,
 			newMarginsReseller,
@@ -181,7 +181,7 @@ const IndexPage = () => {
 		try {
 			//await updateList(2, payload, "Normal");
 			await updateList(3, payloadRBC, "RBC");
-			//await updateList(0, payloadCostList, "Cost List");
+			await updateList(0, payloadCostList, "Cost List");
 			await updateList(1, payloadReseller, "Reseller");
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 
