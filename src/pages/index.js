@@ -157,9 +157,6 @@ const IndexPage = () => {
 				setIsUpdating(false); // Stop loading regardless of success/failure
 			}
 		};
-
-		const payload = createPayload(data, newMargins, newPrices, 2);
-		const payloadRBC = createPayload(data, newMarginsRBC, newPricesRBC, 3);
 		const payloadCostList = createPayload(
 			data,
 			newMarginsCostList,
@@ -172,6 +169,8 @@ const IndexPage = () => {
 			newPricesReseller,
 			1
 		);
+		const payload = createPayload(data, newMargins, newPrices, 2);
+		const payloadRBC = createPayload(data, newMarginsRBC, newPricesRBC, 3);
 
 		//await updateList(2, payload, "Normal");
 		//await updateList(3, payloadRBC, "RBC");
@@ -179,10 +178,10 @@ const IndexPage = () => {
 		//await updateList(1, payloadReseller, "Reseller");
 
 		try {
-			await updateList(2, payload, "Normal");
-			await updateList(3, payloadRBC, "RBC");
 			await updateList(0, payloadCostList, "Cost List");
 			await updateList(1, payloadReseller, "Reseller");
+			await updateList(2, payload, "Normal");
+			await updateList(3, payloadRBC, "RBC");
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 
 			// Reload the page after the 2-second delay
