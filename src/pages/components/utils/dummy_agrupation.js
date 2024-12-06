@@ -22,6 +22,8 @@ export const groups = [
 	{ code: 32, description: "Originales FIAT" },
 	{ code: 35, description: "Originales FORD" },
 	{ code: 34, description: "Originales GM" },
+	{ code: 316, description: "PETRONAS" },
+	{ code: 3, description: "VALVOLINE" },
 ];
 
 export const groups_prod = [

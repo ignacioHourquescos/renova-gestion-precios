@@ -128,7 +128,7 @@ const CustomTable = ({
 		// Columnas de COSTO
 
 		...PriceTable_Normal({
-			name: "LISTA 0",
+			name: "LISTA 1",
 			applyGeneralMargin: applyGeneralMarginCostList,
 			generalMargin: generalMarginCostList,
 			setGeneralMargin: setGeneralMarginCostList,
@@ -142,7 +142,7 @@ const CustomTable = ({
 			modificationType,
 		}),
 		...PriceTable_Normal({
-			name: "LISTA 1",
+			name: "LISTA 2",
 			applyGeneralMargin: applyGeneralMarginReseller,
 			generalMargin: generalMarginReseller,
 			setGeneralMargin: setGeneralMarginReseller,
