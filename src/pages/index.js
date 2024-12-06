@@ -158,7 +158,7 @@ const IndexPage = () => {
 			}
 		};
 
-		//const payload = createPayload(data, newMargins, newPrices, 2);
+		const payload = createPayload(data, newMargins, newPrices, 2);
 		const payloadRBC = createPayload(data, newMarginsRBC, newPricesRBC, 3);
 		const payloadCostList = createPayload(
 			data,
@@ -179,7 +179,7 @@ const IndexPage = () => {
 		//await updateList(1, payloadReseller, "Reseller");
 
 		try {
-			//await updateList(2, payload, "Normal");
+			await updateList(2, payload, "Normal");
 			await updateList(3, payloadRBC, "RBC");
 			await updateList(0, payloadCostList, "Cost List");
 			await updateList(1, payloadReseller, "Reseller");
