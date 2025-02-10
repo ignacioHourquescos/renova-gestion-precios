@@ -95,29 +95,30 @@ const CustomTable = ({
 							align: "right",
 							width: "3%",
 							render: (text, record) => (
-								<>
-									{}
-									<InputNumber
-										value={modifiedNetCosts[record.articleId] || record.netCost}
-										disabled={modificationType != "COST_MODIFICATION"}
-										onChange={(e) =>
-											handleNetCostChange(
-												record.articleId,
-												parseFloat(e.target.value)
-											)
-										}
-										style={{ fontWeight: "bold" }}
-										formatter={(value) =>
-											value !== null && value !== undefined
-												? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-												: ""
-										}
-										parser={(value) => {
-											const parsed = value.replace(/\$\s?|(,*)/g, "");
-											return parsed === "" ? null : Number(parsed);
-										}}
-									/>
-								</>
+								<InputNumber
+									value={modifiedNetCosts[record.articleId] || record.netCost}
+									disabled={modificationType != "COST_MODIFICATION"}
+									onChange={(e) =>
+										handleNetCostChange(
+											record.articleId,
+											parseFloat(e.target.value)
+										)
+									}
+									style={{ fontWeight: "bold" }}
+									formatter={(value) =>
+										value !== null && value !== undefined
+											? `$ ${Math.round(value)
+													.toString()
+													.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+											: ""
+									}
+									parser={(value) => {
+										const parsed = value
+											.replace(/[$\s.]/g, "")
+											.replace(",", ".");
+										return parsed === "" ? null : Number(parsed);
+									}}
+								/>
 							),
 						},
 					],

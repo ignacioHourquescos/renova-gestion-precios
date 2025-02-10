@@ -154,19 +154,22 @@ const PriceTable_Normal = ({
 							align: "right",
 							width: "3%",
 							render: (_, record) => {
-								//prettier-ignore
 								const priceInfo = findPriceByListId(record.prices, listId);
-								const variation =
-									(record.netCost *
-										(1 +
-											(newMargins[record.articleId] || priceInfo.margin) /
-												100)) /
-									priceInfo.netPrice;
 								const newPrice =
 									record.netCost *
 									(1 +
 										(newMargins[record.articleId] || priceInfo.margin) / 100) *
 									(1 - discount / 100);
+
+								const variation =
+									priceInfo.netPrice > 0
+										? (record.netCost *
+												(1 +
+													(newMargins[record.articleId] || priceInfo.margin) /
+														100)) /
+										  priceInfo.netPrice
+										: 1;
+
 								return (
 									<div
 										style={{
@@ -177,12 +180,11 @@ const PriceTable_Normal = ({
 											display: "flex",
 											alignItems: "center",
 											paddingRight: "17px",
-
 											justifyContent: "space-between",
 										}}
 									>
 										{getVariationTriangle(variation)}{" "}
-										{isNaN(newPrice)
+										{isNaN(newPrice) || newPrice === 0
 											? "NO existe"
 											: formatearNumero(newPrice, showWithIVA)}
 									</div>

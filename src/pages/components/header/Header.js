@@ -54,6 +54,7 @@ const Header = ({
 	return (
 		<>
 			<Container>
+				<h2 style={{ margin: "0", padding: "0" }}>GESTOR DE PRECIOS</h2>
 				<div>
 					{/* add datbase name here PROCESS:ENV. */}
 					<Input
@@ -87,21 +88,20 @@ const Header = ({
 					<span style={{ marginLeft: 0 }}>Precios con IVA</span>
 					<Switch checked={showWithIVA} onChange={handleSwitchChange} />
 				</div>
-
 				<div
 					style={{
 						display: "flex",
 						justifyContent: "space-between",
 					}}
 				>
-					<Button
+					{/*<Button
 						type="primary"
 						onClick={handleSave}
 						disabled={modificationType !== "COST_MODIFICATION"}
 						style={{ flex: 1, marginRight: "8px" }}
 					>
 						Guardar COSTOS Actualizados
-					</Button>
+					</Button>*/}
 
 					<Button
 						type="primary"
@@ -189,7 +189,7 @@ const Header = ({
 						marginTop: "16px",
 					}}
 				>
-					<Button
+					{/*<Button
 						onClick={() => {
 							handleModalClose();
 							setModificationType("COST_MODIFICATION");
@@ -198,7 +198,7 @@ const Header = ({
 						style={{ flex: 1, marginRight: "8px" }}
 					>
 						Modificar Costos
-					</Button>
+					</Button>*/}
 
 					<Button
 						type="primary"
