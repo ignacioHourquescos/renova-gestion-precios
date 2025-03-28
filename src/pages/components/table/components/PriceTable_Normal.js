@@ -3,6 +3,7 @@ import { Button, InputNumber } from "antd";
 import { formatearNumero, variationFormatter } from "../../../../utils";
 import ThunderInput from "./componentes/ThunderInput";
 import { ThunderboltOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
 
 const PriceTable_Normal = ({
 	name,
@@ -16,6 +17,7 @@ const PriceTable_Normal = ({
 	listId,
 	showVariation,
 	modificationType,
+	data,
 }) => {
 	const [discount, setDiscount] = useState(0);
 	const isDisabled = modificationType === "COST_MODIFICATION";
@@ -32,9 +34,71 @@ const PriceTable_Normal = ({
 			}
 		);
 	};
+
+	const handleDownloadExcel = () => {
+		console.log("click en download de lista");
+		if (!data || !Array.isArray(data)) {
+			console.warn("No data available for export");
+			return;
+		}
+
+		// Get the data for this specific price list
+		const excelData = data.map((item) => {
+			const priceInfo = findPriceByListId(item.prices || [], listId);
+			const newPrice =
+				item.netCost *
+				(1 + (newMargins[item.articleId] || priceInfo.margin) / 100) *
+				(1 - discount / 100);
+
+			return {
+				Código: item.articleId,
+				Descripción: item.description,
+				Precio: Number(newPrice).toFixed(2),
+				PrecioConIVA: Number(newPrice * 1.21).toFixed(2),
+			};
+		});
+
+		try {
+			const wb = XLSX.utils.book_new();
+			const ws = XLSX.utils.json_to_sheet(excelData);
+
+			// Add column widths for better readability
+			const colWidths = [
+				{ wch: 15 }, // Código
+				{ wch: 30 }, // Descripción
+				{ wch: 15 }, // Costo Neto
+				{ wch: 12 }, // Margen
+				{ wch: 15 }, // Precio
+			];
+			ws["!cols"] = colWidths;
+
+			XLSX.utils.book_append_sheet(wb, ws, name);
+			XLSX.writeFile(
+				wb,
+				`Lista_Precios_${name}_${new Date().toISOString().split("T")[0]}.xlsx`
+			);
+		} catch (error) {
+			console.error("Error generating Excel file:", error);
+		}
+	};
+
 	return [
 		{
-			title: <h3 style={{ margin: "0", padding: "0" }}>{name}</h3>,
+			title: (
+				<h3
+					style={{
+						margin: "0",
+						padding: "0",
+						cursor: "pointer",
+						"&:hover": {
+							textDecoration: "underline",
+						},
+					}}
+					onClick={handleDownloadExcel}
+				>
+					{name}
+				</h3>
+			),
 			children: [
 				{
 					title: (

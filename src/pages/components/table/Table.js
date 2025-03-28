@@ -53,18 +53,22 @@ const CustomTable = ({
 	showVariation,
 	loading,
 }) => {
-	const filteredData = data.filter((item) =>
-		searchText.length >= 3
-			? item.articleId
-					.toString()
-					.toLowerCase()
-					.includes(searchText.toLowerCase()) ||
-			  item.description
-					.toString()
-					.toLowerCase()
-					.includes(searchText.toLowerCase())
-			: true
-	);
+	const filteredData = React.useMemo(() => {
+		if (!data || !Array.isArray(data)) return [];
+
+		return data.filter((item) =>
+			searchText.length >= 3
+				? item.articleId
+						.toString()
+						.toLowerCase()
+						.includes(searchText.toLowerCase()) ||
+				  item.description
+						.toString()
+						.toLowerCase()
+						.includes(searchText.toLowerCase())
+				: true
+		);
+	}, [data, searchText]);
 
 	const columns = [
 		{
@@ -141,6 +145,7 @@ const CustomTable = ({
 			listId: 0,
 			showVariation,
 			modificationType,
+			data: filteredData,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA 2",
@@ -155,6 +160,7 @@ const CustomTable = ({
 			listId: 1,
 			showVariation,
 			modificationType,
+			data: filteredData,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
@@ -169,6 +175,7 @@ const CustomTable = ({
 			listId: 2,
 			showVariation,
 			modificationType,
+			data: filteredData,
 		}),
 
 		...PriceTable_Normal({
@@ -184,6 +191,7 @@ const CustomTable = ({
 			listId: 3,
 			showVariation,
 			modificationType,
+			data: filteredData,
 		}),
 	];
 
