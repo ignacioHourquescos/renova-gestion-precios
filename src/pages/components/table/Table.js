@@ -210,7 +210,7 @@ const CustomTable = ({
 				scroll={{ y: "75vh" }} // Enable vertical scrolling
 				sticky={true}
 				pagination={{
-					defaultPageSize: 100,
+					defaultPageSize: 50,
 					position: ["bottomCenter"],
 					size: "small",
 				}}

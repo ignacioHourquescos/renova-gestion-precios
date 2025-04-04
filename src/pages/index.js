@@ -124,6 +124,7 @@ const IndexPage = () => {
 						body: JSON.stringify(payload),
 					}
 				);
+				console.log("payload a update List", listId, payload);
 				if (!response.ok) {
 					const errorData = await response.json();
 					const errorMessage = errorData.message || "Unknown error occurred";

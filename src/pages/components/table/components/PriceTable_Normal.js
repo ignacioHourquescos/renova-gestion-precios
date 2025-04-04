@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, InputNumber } from "antd";
 import { formatearNumero, variationFormatter } from "../../../../utils";
 import ThunderInput from "./componentes/ThunderInput";
@@ -34,6 +34,28 @@ const PriceTable_Normal = ({
 			}
 		);
 	};
+
+	// When component mounts or when data changes, initialize all margins
+	useEffect(() => {
+		if (data && Array.isArray(data)) {
+			const initialMargins = {};
+			data.forEach((item) => {
+				const priceInfo = findPriceByListId(item.prices, listId);
+				// Only set if it doesn't already exist in newMargins
+				if (!(item.articleId in newMargins)) {
+					initialMargins[item.articleId] = priceInfo.margin;
+				}
+			});
+
+			// Update newMargins with any missing items
+			if (Object.keys(initialMargins).length > 0) {
+				setNewMargins((prev) => ({
+					...prev,
+					...initialMargins,
+				}));
+			}
+		}
+	}, [data, listId]);
 
 	const handleDownloadExcel = () => {
 		console.log("click en download de lista");
@@ -138,12 +160,7 @@ const PriceTable_Normal = ({
 					render: (value, record) => {
 						const priceInfo = findPriceByListId(record.prices, listId);
 						const initialMargin = priceInfo.margin;
-						if (!(record.articleId in newMargins)) {
-							setNewMargins((prev) => ({
-								...prev,
-								[record.articleId]: initialMargin,
-							}));
-						}
+
 						return (
 							<InputNumber
 								suffix="%"
