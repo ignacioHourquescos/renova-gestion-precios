@@ -87,7 +87,7 @@ const PriceTable_Normal = ({
 			// Add column widths for better readability
 			const colWidths = [
 				{ wch: 15 }, // Código
-				{ wch: 30 }, // Descripción
+				{ wch: 40 }, // Descripción
 				{ wch: 15 }, // Costo Neto
 				{ wch: 12 }, // Margen
 				{ wch: 15 }, // Precio
@@ -109,8 +109,12 @@ const PriceTable_Normal = ({
 			title: (
 				<h3
 					style={{
-						margin: "0",
-						padding: "0",
+						border: "2px solid white",
+						padding: "0.2rem",
+						margin: "0 0.3rem",
+						borderRadius: "50px",
+						textAlign: "center",
+
 						cursor: "pointer",
 						"&:hover": {
 							textDecoration: "underline",
