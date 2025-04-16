@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Button, Select, Switch, Input } from "antd";
 import { groups } from "../utils/dummy_agrupation"; // Ajusta la ruta según la ubicación real
 import { groups_prod } from "../utils/dummy_agrupation";
@@ -31,6 +31,8 @@ const Header = ({
 	modificationType,
 	isUpdating,
 }) => {
+	const [isSpreadsheetModalVisible, setIsSpreadsheetModalVisible] =
+		useState(false);
 	const { styles } = useStyle();
 	const token = useTheme();
 
@@ -55,6 +57,7 @@ const Header = ({
 		<>
 			<Container>
 				<h2 style={{ margin: "0", padding: "0" }}>GESTOR DE PRECIOS</h2>
+
 				<div>
 					{/* add datbase name here PROCESS:ENV. */}
 					<Input
@@ -101,8 +104,18 @@ const Header = ({
 						style={{ flex: 1, marginRight: "8px" }}
 					>
 						Guardar COSTOS Actualizados
-					</Button>*/}
-
+					</Button>*/}{" "}
+					<Button
+						type="primary"
+						size="large"
+						style={{
+							backgroundColor: "rgb(231, 96, 51)",
+							marginBottom: "0px",
+						}}
+						onClick={() => setIsSpreadsheetModalVisible(true)}
+					>
+						Ver Planilla Estado
+					</Button>
 					<Button
 						type="primary"
 						onClick={handleSave}
@@ -211,6 +224,35 @@ const Header = ({
 						Modificar Precios
 					</Button>
 				</div>
+			</Modal>
+
+			{/* New Spreadsheet Modal */}
+			<Modal
+				title="Planilla de Estado"
+				open={isSpreadsheetModalVisible}
+				onCancel={() => setIsSpreadsheetModalVisible(false)}
+				footer={null}
+				width="90vw"
+				style={{
+					top: 20,
+				}}
+				bodyStyle={{
+					height: "80vh",
+					padding: 0,
+					overflow: "hidden",
+				}}
+			>
+				<iframe
+					src="https://docs.google.com/spreadsheets/d/11G0L6CtzwsdEkdOMLGH0x5vZz1CWfTQGUR81DJ6wHAQ/edit?rm=minimal#gid=0"
+					width="100%"
+					height="100%"
+					frameBorder="0"
+					style={{
+						border: "none",
+						width: "100%",
+						height: "100%",
+					}}
+				/>
 			</Modal>
 		</>
 	);
