@@ -53,6 +53,10 @@ const CustomTable = ({
 	searchText,
 	showVariation,
 	loading,
+	setNewPrices,
+	setNewPricesCostList,
+	setNewPricesRBC,
+	setNewPricesReseller,
 }) => {
 	const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 	const [selectedRecord, setSelectedRecord] = useState(null);
@@ -91,19 +95,23 @@ const CustomTable = ({
 	const handleDrawerOk = () => {
 		if (!selectedRecord || selectedListId === null) return;
 
-		let marginSetter;
+		let marginSetter, priceSetter;
 		switch (selectedListId) {
 			case 0:
 				marginSetter = setNewMarginsCostList;
+				priceSetter = setNewPricesCostList;
 				break;
 			case 1:
 				marginSetter = setNewMarginsReseller;
+				priceSetter = setNewPricesReseller;
 				break;
 			case 2:
 				marginSetter = setNewMargins;
+				priceSetter = setNewPrices;
 				break;
 			case 3:
 				marginSetter = setNewMarginsRBC;
+				priceSetter = setNewPricesRBC;
 				break;
 			default:
 				return;
@@ -111,11 +119,19 @@ const CustomTable = ({
 
 		const netCost =
 			modifiedNetCosts[selectedRecord.articleId] || selectedRecord.netCost;
-		const newMargin = calculateMarginFromPrice(tempPrice, netCost);
 
+		// Actualizamos tanto el margen como el precio
 		marginSetter((prev) => ({
 			...prev,
-			[selectedRecord.articleId]: Number(parseFloat(newMargin).toFixed(4)),
+			[selectedRecord.articleId]: Number(
+				parseFloat(calculateMarginFromPrice(tempPrice, netCost)).toFixed(4)
+			),
+		}));
+
+		// Actualizamos el precio nuevo
+		priceSetter((prev) => ({
+			...prev,
+			[selectedRecord.articleId]: Number(parseFloat(tempPrice).toFixed(4)),
 		}));
 
 		handleDrawerClose();

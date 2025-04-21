@@ -356,6 +356,10 @@ const IndexPage = () => {
 				newPricesRBC={newPricesRBC}
 				newPricesCostList={newPricesCostList}
 				newPricesReseller={newPricesReseller}
+				setNewPrices={setNewPrices}
+				setNewPricesRBC={setNewPricesRBC}
+				setNewPricesReseller={setNewPricesReseller}
+				setNewPricesCostList={setNewPricesCostList}
 				setGeneralMargin={setGeneralMargin}
 				setGeneralMarginRBC={setGeneralMarginRBC}
 				setGeneralMarginCostList={setGeneralMarginCostList}
