@@ -173,13 +173,13 @@ const PriceTable_Normal = ({
 								onChange={(value) =>
 									handleNewMarginChange(value !== null ? value : 0, record)
 								}
-								precision={2}
-								step={0.01}
+								precision={4}
+								step={0.0001}
 								className="percentaje"
 								disabled={isDisabled}
 								formatter={(value) =>
 									value !== null && value !== undefined
-										? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+										? `${value}`.replace(/\B(?=(\d{4})+(?!\d))/g, ",")
 										: ""
 								}
 								parser={(value) => {
