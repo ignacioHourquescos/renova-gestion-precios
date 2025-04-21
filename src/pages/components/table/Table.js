@@ -53,7 +53,6 @@ const CustomTable = ({
 	searchText,
 	showVariation,
 	loading,
-	handlePriceClick,
 }) => {
 	const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 	const [selectedRecord, setSelectedRecord] = useState(null);
@@ -120,6 +119,35 @@ const CustomTable = ({
 		}));
 
 		handleDrawerClose();
+	};
+
+	const handlePriceClick = (record, listId) => {
+		setSelectedRecord(record);
+		setSelectedListId(listId);
+
+		// Establecer el precio actual como valor inicial
+		const netCost = modifiedNetCosts[record.articleId] || record.netCost;
+		const currentMargin = (() => {
+			switch (listId) {
+				case 0:
+					return newMarginsCostList[record.articleId];
+				case 1:
+					return newMarginsReseller[record.articleId];
+				case 2:
+					return newMargins[record.articleId];
+				case 3:
+					return newMarginsRBC[record.articleId];
+				default:
+					return 0;
+			}
+		})();
+
+		const priceInfo = record.prices.find((p) => p.listId === listId);
+		const initialPrice =
+			netCost * (1 + (currentMargin || priceInfo.margin) / 100);
+		setTempPrice(initialPrice);
+		setManualPrice(initialPrice * 1.21); // Establecemos el precio con IVA
+		setIsDrawerVisible(true);
 	};
 
 	const filteredData = React.useMemo(() => {
@@ -239,7 +267,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
-			onPriceClick: (record) => handlePriceClick(record, 0),
+			handlePriceClick,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA 2",
@@ -255,7 +283,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
-			onPriceClick: (record) => handlePriceClick(record, 1),
+			handlePriceClick,
 		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
@@ -271,6 +299,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
+			handlePriceClick,
 		}),
 
 		...PriceTable_Normal({
@@ -287,6 +316,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
+			handlePriceClick,
 		}),
 	];
 

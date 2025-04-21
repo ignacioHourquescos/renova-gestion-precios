@@ -18,22 +18,18 @@ const PriceTable_Normal = ({
 	showVariation,
 	modificationType,
 	data,
-	onPriceClick,
+	handlePriceClick,
 }) => {
 	const [discount, setDiscount] = useState(0);
 	const isDisabled = modificationType === "COST_MODIFICATION";
 
-	const findPriceByListId = (prices, targetListId) => {
-		const dummyPriceRecord = {
-			listId: 0,
-			netPrice: 0,
-			margin: 0,
-		};
+	const findPriceByListId = (prices, listId) => {
+		if (!prices || !Array.isArray(prices)) {
+			return { margin: 0, netPrice: 0 }; // Valor por defecto si prices es undefined o no es un array
+		}
 		return (
-			prices.find((price) => price.listId === targetListId) || {
-				dummyPriceRecord,
-			}
-		);
+			prices.find((p) => p.listId === listId) || { margin: 0, netPrice: 0 }
+		); // Valor por defecto si no se encuentra el precio
 	};
 
 	// When component mounts or when data changes, initialize all margins
@@ -258,7 +254,9 @@ const PriceTable_Normal = ({
 
 								return (
 									<div
-										onClick={() => !isDisabled && onPriceClick(record)}
+										onClick={() =>
+											!isDisabled && handlePriceClick(record, listId)
+										}
 										style={{
 											backgroundColor: isDisabled ? "#f0f0f0" : "white",
 											padding: "0 !important",
