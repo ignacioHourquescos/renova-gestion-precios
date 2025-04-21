@@ -179,8 +179,8 @@ const IndexPage = () => {
 		//await updateList(1, payloadReseller, "Reseller");
 
 		try {
-			await updateList(0, payloadCostList, "Cost List");
-			await updateList(1, payloadReseller, "Reseller");
+			await updateList(0, payloadCostList, "1");
+			await updateList(1, payloadReseller, "2");
 			await updateList(2, payload, "Normal");
 			await updateList(3, payloadRBC, "RBC");
 			await new Promise((resolve) => setTimeout(resolve, 2000));
