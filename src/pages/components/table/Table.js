@@ -1,5 +1,5 @@
-import React from "react";
-import { Input, InputNumber, Table } from "antd";
+import React, { useState } from "react";
+import { Input, InputNumber, Table, Button, Drawer } from "antd";
 import { formatearNumero } from "../../../utils";
 import "./Spinner.css";
 import * as XLSX from "xlsx";
@@ -53,7 +53,75 @@ const CustomTable = ({
 	searchText,
 	showVariation,
 	loading,
+	handlePriceClick,
 }) => {
+	const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+	const [selectedRecord, setSelectedRecord] = useState(null);
+	const [selectedListId, setSelectedListId] = useState(null);
+	const [tempPrice, setTempPrice] = useState(null);
+	const [manualPrice, setManualPrice] = useState(null);
+
+	const calculateMarginFromPrice = (price, cost) => {
+		if (!price || !cost) return 0;
+		return ((price / cost - 1) * 100).toFixed(4);
+	};
+
+	const calculatePriceWithoutIVA = (priceWithIVA) => {
+		return Number((priceWithIVA / 1.21).toFixed(4));
+	};
+
+	const handlePriceChange = (value) => {
+		if (!value) {
+			setManualPrice(null);
+			setTempPrice(null);
+			return;
+		}
+		setManualPrice(value);
+		const priceWithoutIVA = value / 1.21;
+		setTempPrice(priceWithoutIVA);
+	};
+
+	const handleDrawerClose = () => {
+		setIsDrawerVisible(false);
+		setSelectedRecord(null);
+		setSelectedListId(null);
+		setTempPrice(null);
+		setManualPrice(null);
+	};
+
+	const handleDrawerOk = () => {
+		if (!selectedRecord || selectedListId === null) return;
+
+		let marginSetter;
+		switch (selectedListId) {
+			case 0:
+				marginSetter = setNewMarginsCostList;
+				break;
+			case 1:
+				marginSetter = setNewMarginsReseller;
+				break;
+			case 2:
+				marginSetter = setNewMargins;
+				break;
+			case 3:
+				marginSetter = setNewMarginsRBC;
+				break;
+			default:
+				return;
+		}
+
+		const netCost =
+			modifiedNetCosts[selectedRecord.articleId] || selectedRecord.netCost;
+		const newMargin = calculateMarginFromPrice(tempPrice, netCost);
+
+		marginSetter((prev) => ({
+			...prev,
+			[selectedRecord.articleId]: Number(parseFloat(newMargin).toFixed(4)),
+		}));
+
+		handleDrawerClose();
+	};
+
 	const filteredData = React.useMemo(() => {
 		if (!data || !Array.isArray(data)) return [];
 
@@ -171,6 +239,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
+			onPriceClick: (record) => handlePriceClick(record, 0),
 		}),
 		...PriceTable_Normal({
 			name: "LISTA 2",
@@ -186,6 +255,7 @@ const CustomTable = ({
 			showVariation,
 			modificationType,
 			data: filteredData,
+			onPriceClick: (record) => handlePriceClick(record, 1),
 		}),
 		...PriceTable_Normal({
 			name: "LISTA NORMAL",
@@ -298,22 +368,114 @@ const CustomTable = ({
 	};
 
 	return (
-		<TableContainer>
-			<Table
-				className="table-custom"
-				columns={columns}
-				dataSource={filteredData}
-				rowKey="articleId"
-				scroll={{ y: "75vh" }} // Enable vertical scrolling
-				sticky={true}
-				pagination={{
-					defaultPageSize: 50,
-					position: ["bottomCenter"],
-					size: "small",
-				}}
-				loading={tableLoading}
-			/>
-		</TableContainer>
+		<>
+			<TableContainer>
+				<Table
+					className="table-custom"
+					columns={columns}
+					dataSource={filteredData}
+					rowKey="articleId"
+					scroll={{ y: "75vh" }} // Enable vertical scrolling
+					sticky={true}
+					pagination={{
+						defaultPageSize: 50,
+						position: ["bottomCenter"],
+						size: "small",
+					}}
+					loading={tableLoading}
+				/>
+			</TableContainer>
+			<Drawer
+				title="Modificar Precio de Venta"
+				open={isDrawerVisible}
+				onClose={handleDrawerClose}
+				width={400}
+				extra={
+					<Button type="primary" onClick={handleDrawerOk}>
+						Guardar
+					</Button>
+				}
+			>
+				{selectedRecord && (
+					<div
+						style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+					>
+						<div>
+							<h3>Código Artículo: {selectedRecord.articleId}</h3>
+							<p>{selectedRecord.description}</p>
+						</div>
+
+						<div
+							style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+						>
+							<div>
+								<p>Costo:</p>
+								<InputNumber
+									disabled
+									value={
+										modifiedNetCosts[selectedRecord.articleId] ||
+										selectedRecord.netCost
+									}
+									style={{ width: "100%" }}
+									formatter={(value) =>
+										value
+											? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+											: ""
+									}
+								/>
+							</div>
+
+							<div>
+								<p>Margen (%):</p>
+								<InputNumber
+									disabled
+									value={calculateMarginFromPrice(
+										tempPrice,
+										modifiedNetCosts[selectedRecord.articleId] ||
+											selectedRecord.netCost
+									)}
+									style={{ width: "100%" }}
+									formatter={(value) =>
+										value ? `${Number(value).toFixed(4)}%` : ""
+									}
+								/>
+							</div>
+
+							<div>
+								<p>Precio sin IVA:</p>
+								<InputNumber
+									disabled
+									value={tempPrice}
+									style={{ width: "100%" }}
+									formatter={(value) =>
+										value
+											? `$ ${Number(value).toFixed(4)}`.replace(
+													/\B(?=(\d{3})+(?!\d))/g,
+													"."
+											  )
+											: ""
+									}
+								/>
+							</div>
+
+							<div>
+								<p>Precio Final (IVA incluido):</p>
+								<InputNumber
+									className="price-input-red"
+									value={manualPrice}
+									onChange={handlePriceChange}
+									style={{ width: "100%" }}
+									decimalSeparator=","
+									precision={4}
+									formatter={(value) => (value ? `$ ${value}` : "")}
+									parser={(value) => value?.replace(/\$\s?/g, "")}
+								/>
+							</div>
+						</div>
+					</div>
+				)}
+			</Drawer>
+		</>
 	);
 };
 

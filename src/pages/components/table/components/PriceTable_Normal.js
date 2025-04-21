@@ -18,6 +18,7 @@ const PriceTable_Normal = ({
 	showVariation,
 	modificationType,
 	data,
+	onPriceClick,
 }) => {
 	const [discount, setDiscount] = useState(0);
 	const isDisabled = modificationType === "COST_MODIFICATION";
@@ -257,6 +258,7 @@ const PriceTable_Normal = ({
 
 								return (
 									<div
+										onClick={() => !isDisabled && onPriceClick(record)}
 										style={{
 											backgroundColor: isDisabled ? "#f0f0f0" : "white",
 											padding: "0 !important",
@@ -266,6 +268,7 @@ const PriceTable_Normal = ({
 											alignItems: "center",
 											paddingRight: "17px",
 											justifyContent: "space-between",
+											cursor: isDisabled ? "not-allowed" : "pointer",
 										}}
 									>
 										{getVariationTriangle(variation)}{" "}
