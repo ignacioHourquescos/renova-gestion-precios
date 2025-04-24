@@ -1,5 +1,6 @@
 export const groups = [
 	{ code: 2, description: "AGRUPACION PRUEBA" },
+	{ code: 19, description: "VARIOS (LUBRICANTES)" },
 	{ code: 331, description: "BALDWIN" },
 	{ code: 41, description: "COSMETICA" },
 	{ code: 48, description: "EAM" },
